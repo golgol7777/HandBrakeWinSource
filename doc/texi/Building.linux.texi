@@ -1,0 +1,110 @@
+@input texinfo @c -*- Texinfo -*-
+@c %**start of header
+@setfilename Building.linux.info
+@include base/article.texi
+@include building/command.texi
+@paragraphindent none
+
+@set BG.platform linux
+@c %**end of header
+
+@majorheading Guide to Building @value{HB.title} on @value{OS.@value{BG.platform}}
+@contents
+@include building/chapter.introduction.texi
+
+@c %**-------------------------------------------------------------------------
+@anchor{prerequisites}
+@chapter Prerequisites
+The following are the recommended specifications for building on @value{OS.linux}; but is not necessarily the only configuration that is possible:
+
+@itemize @bullet
+@item Intel 32-bit or 64-bit kernel
+@item Ubuntu 8.0.4, gcc 4.3.0, yasm 0.7.1.2093
+@item Ubuntu 8.10, gcc 4.3.2, yasm 0.7.1.2093
+@item Fedora 9, gcc 4.3.0, yasm 0.7.1.2093
+@item Fedora 10, gcc 4.3.2, yasm 0.7.1.2093
+@item gcc 4.0.0 or higher is reported to work
+@end itemize
+
+@include building/prerequisites.bundled.texi
+
+@include building/prerequisites.common.texi
+
+The @b{GTK UI} introduces some significant extra build requirements. If you intend to disable building the GUI with @command{configure --disable-gtk} you will not need many of these packages installed:
+
+Ubuntu 8.10 packages:
+@itemize @bullet
+@item subversion (cli/gui)
+@item yasm (cli/gui)
+@item build-essential (cli/gui)
+@item autoconf (cli/gui)
+@item libtool (cli/gui)
+@item zlib1g-dev (cli/gui)
+@item libbz2-dev (cli/gui)
+@item intltool (gui)
+@item libglib2.0-dev (gui)
+@item libdbus-glib-1-dev (gui)
+@item libgtk2.0-dev (gui)
+@item libhal-dev (gui)
+@item libhal-storage-dev (gui)
+@item libwebkit-dev (gui)
+@item libnotify-dev (gui)
+@item libgstreamer0.10-dev (gui)
+@item libgstreamer-plugins-base0.10-dev (gui)
+@end itemize
+
+To install these packages:
+@example
+sudo apt-get install subversion yasm build-essential \
+autoconf libtool zlib1g-dev libbz2-dev intltool libglib2.0-dev \
+libdbus-glib-1-dev libgtk2.0-dev libhal-dev libhal-storage-dev \
+libwebkit-dev libnotify-dev libgstreamer0.10-dev \
+libgstreamer-plugins-base0.10-dev
+@end example
+
+Fedora 10 package groups:
+@itemize @bullet
+@item Development Tools
+@item Development Libraries
+@item X Software Development (gui)
+@item GNOME Software Development (gui)
+@end itemize
+
+To install these package groups:
+@example
+sudo yum groupinstall "Development Tools" "Development Libraries" \
+"X Software Development" "GNOME Software Development"
+@end example
+
+Additional Fedora 10 packages:
+@itemize @bullet
+@item yasm (cli/gui)
+@item zlib-devel (cli/gui)
+@item bzip2-devel (cli/gui)
+@item dbus-glib-devel (gui)
+@item hal-devel (gui)
+@item webkitgtk-devel (gui)
+@item libnotify-devel (gui)
+@item gstreamer-devel (gui)
+@item gstreamer-plugins-base-devel (gui)
+@end itemize
+
+To install these packages:
+@example
+sudo yum install yasm zlib-devel bzip2-devel \
+dbus-glib-devel hal-devel webkitgtk-devel libnotify-devel\
+gstreamer-devel gstreamer-plugins-base-devel
+@end example
+
+
+@c %**-------------------------------------------------------------------------
+@include building/chapter.quickstart.texi
+
+@anchor{overview}
+@chapter Overview
+@value{OS.linux} builds are performed from a @b{terminal}. There is no support for building from any IDEs.
+
+@c %**-------------------------------------------------------------------------
+@include building/chapter.via.terminal.texi
+@include building/chapter.troubleshooting.texi
+@include building/appendix.repo.texi

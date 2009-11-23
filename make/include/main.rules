@@ -1,0 +1,57 @@
+.DELETE_ON_ERROR:
+.SUFFIXES:
+
+###############################################################################
+
+## file-wide conditional to use xcode rules if xcode=1 method=terminal
+## xcodemake will set BUILD.method != terminal to prevent infinite recursion
+ifeq (1:terminal,$(FEATURE.xcode):$(BUILD.method))
+    include $(SRC/)macosx/module.xcode
+else
+
+## only included using special report targets
+ifneq (,$(REPORT))
+    include $(SRC/)make/include/report.defs
+endif
+
+###############################################################################
+
+.PHONY: build clean install uninstall xclean doc report
+
+build:
+clean:
+install:
+uninstall:
+xclean: contrib.xclean clean
+doc:
+report:: report.main report.modules
+
+## legacy
+mrproper: xclean
+
+###############################################################################
+
+include $(SRC/)make/include/base.rules
+
+include $(MODULES:%=$(SRC/)%/module.rules)
+-include $(SRC/)make/variant/$(BUILD.system).rules
+-include $(SRC/)make/variant/$(BUILD.system).$(BUILD.machine).rules
+
+###############################################################################
+
+## target which causes re-configure if project-root is svn update'd
+$(BUILD/)GNUmakefile: $(wildcard $(SRC/).svn/entries)
+	$(SRC/)configure --force --conf-method=$(CONF.method) $(CONF.args)
+
+## target useful to force reconfigure; only helpful for build-system development
+.PHONY: reconfigure
+reconfigure:
+	$(SRC/)configure --force --conf-method=$(CONF.method) $(CONF.args)
+
+###############################################################################
+
+## target to build all dependency dirs
+$(sort $(dir $(BUILD.out))):
+	$(MKDIR.exe) -p $@
+
+endif ## xcode=1 method=terminal

@@ -1,0 +1,25 @@
+--- ffmpeg/configure	Sat Jun  7 03:19:09 2008
++++ ffmpeg.solaris/configure	Thu Jun 19 12:10:48 2008
+@@ -50,6 +50,9 @@
+     exit 1
+ fi
+ 
++# Solaris must use the xpg4 version of grep
++PATH=/usr/xpg4/bin:$PATH
++
+ show_help(){
+   echo "Usage: configure [options]"
+   echo "Options: [defaults in brackets after descriptions]"
+@@ -1585,8 +1588,11 @@
+ check_cc <<EOF || die "endian test failed"
+ unsigned int endian = 'B' << 24 | 'I' << 16 | 'G' << 8 | 'E';
+ EOF
+-od -A n -t x1 $TMPO | grep -q '42 *49 *47 *45' && enable bigendian
++#od -A n -t x1 $TMPO | grep -q '42 *49 *47 *45' && enable bigendian
++/usr/bin/tr -cd "BIGE" < $TMPO | grep -q 'B *I *G *E' && enable bigendian
+ 
++echo "BIGE=$bigendian"
++
+ # ---
+ # check availability of some header files
+ 

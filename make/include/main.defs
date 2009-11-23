@@ -1,0 +1,78 @@
+include $(SRC/)make/include/base.defs
+include $(SRC/)make/include/contrib.defs
+include $(SRC/)make/include/function.defs
+include $(SRC/)make/include/gcc.defs
+include $(SRC/)make/include/select.defs
+include $(SRC/)make/include/target.defs
+include $(SRC/)make/include/tool.defs
+
+###############################################################################
+
+MODULES += contrib/a52dec
+
+ifneq (,$(filter $(BUILD.system),cygwin mingw))
+    MODULES += contrib/bzip2
+endif
+
+MODULES += contrib/faac
+MODULES += contrib/faad2
+MODULES += contrib/ffmpeg
+MODULES += contrib/lame
+MODULES += contrib/libdca
+MODULES += contrib/libdvdread
+MODULES += contrib/libdvdnav
+MODULES += contrib/libmkv
+MODULES += contrib/libogg
+MODULES += contrib/libsamplerate
+MODULES += contrib/libtheora
+MODULES += contrib/libvorbis
+MODULES += contrib/mp4v2
+MODULES += contrib/mpeg2dec
+
+ifneq (,$(filter $(BUILD.system),mingw))
+    MODULES += contrib/pthreadw32
+endif
+
+MODULES += contrib/x264
+
+ifneq (,$(filter $(BUILD.system),cygwin mingw))
+    MODULES += contrib/libiconv
+    MODULES += contrib/zlib
+endif
+
+ifneq (,$(filter $(BUILD.system),solaris))
+    MODULES += contrib/libiconv
+endif
+
+## these must come after contrib since some contrib modules are optional
+MODULES += libhb
+
+###############################################################################
+
+ifeq (1-darwin,$(FEATURE.xcode)-$(BUILD.system))
+    ## use macosx module when xcode+darwin
+    MODULES += macosx
+else
+    ## default is to build CLI
+    MODULES += test
+endif
+
+ifeq (1-mingw,$(FEATURE.gtk.mingw)-$(BUILD.system))
+    MODULES += gtk
+endif
+
+ifeq (1-linux,$(FEATURE.gtk)-$(BUILD.system))
+    ## build gtk when gtk+linux
+    MODULES += gtk
+endif
+
+###############################################################################
+
+MODULES += doc
+MODULES += pkg
+
+###############################################################################
+
+include $(MODULES:%=$(SRC/)%/module.defs)
+include $(SRC/)make/variant/$(BUILD.system).defs
+-include $(SRC/)make/variant/$(BUILD.system).$(BUILD.machine).defs

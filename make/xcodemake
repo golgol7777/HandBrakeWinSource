@@ -1,0 +1,105 @@
+#!/bin/bash
+#
+
+set -e
+
+## This script is invoked by Xcode external targets.
+##
+## We must guarantee no jobserver is passed through since the file-descriptors
+## have been clobbered by Xcode. If this is not done then make behaves as if
+## it is allowed to run an infinite number of jobs.
+##
+MAKEFLAGS=
+MFLAGS=
+
+## sanity check - the build system only supports 1 arch at a time
+archcount=`echo $ARCHS | awk '{ print NF }'`
+if [ "$archcount" -ne 1 ]; then
+    echo "*********************************************************************"
+    echo "***"
+    echo "*** ERROR: invalid number of architectures: $ARCHS"
+    echo "*** This build system builds one (1) archtecture at a time."
+    echo "***"
+    echo "*********************************************************************"
+    exit 1
+fi
+
+## compute if re/configure necessary
+if [ $EXTERNAL_METHOD != 'xcode' ]; then
+    reconfigure="terminal -> Xcode"
+elif [ ! -f $EXTERNAL_BUILD/GNUmakefile ]; then
+    reconfigure="no configuration present"
+elif [ $EXTERNAL_SRC/make/configure.py -nt $EXTERNAL_BUILD/GNUmakefile ]; then
+    reconfigure="configure script was updated"
+else
+    reconfigure=
+fi
+
+## perform re/configure
+if [ -n "$reconfigure" ]; then
+    echo "reconfiguring ($reconfigure)"
+
+    case "$CONFIGURATION" in
+    debug*)
+        debug="--debug=max --optimize=none"
+        ;;
+    standard*|*)
+        debug=
+        ;;
+    esac
+
+    ## invoke configure with (hidden) option which indicates conf performed by xcode
+    (set -x; $EXTERNAL_SRC/configure --force $EXTERNAL_CONFARGS \
+        --build=$EXTERNAL_BUILD --arch=$ARCHS $debug --conf-method=xcode PATH=$PATH )
+fi
+
+## compute goals; these correlate with TARGET_NAME and ACTION from Xcode
+spec="$TARGET_NAME:$ACTION"
+echo "env specification: $spec"
+case "$spec" in
+    contrib:clean)
+        goals=contrib.xclean
+        ;;
+    contrib:*)
+        goals=contrib.install
+        ;;
+    external:clean)
+        goals=clean
+        ;;
+    external:*)
+        if [ -z "$EXTERNAL_GOALS" ]; then
+            goals=build
+        else
+            goals="$EXTERNAL_GOALS"
+        fi
+        ;;
+    libhb:clean)
+        goals=libhb.clean
+        ;;
+    libhb:*)
+        goals=libhb.build
+        ;;
+    *)
+        echo "ERROR: invalid env specification: $spec"
+        exit 1
+        ;;
+esac
+
+## safeguard against passing blank value which would result in unlimited jobs
+if [ -z "$EXTERNAL_JOBS" ]; then
+    jobs=
+else
+    jobs=--jobs=$EXTERNAL_JOBS
+fi
+
+## log environment as provided by Xcode
+logdir=$EXTERNAL_BUILD/log
+if [ ! -d $logdir ]; then
+    mkdir -p $logdir
+fi
+env | sort > $logdir/xcodemake.env.txt
+
+## pull the trigger
+## must set BUILD.method != terminal to prevent inifinite recursion
+set -x
+exec make -C $EXTERNAL_BUILD BUILD.method=xcode $jobs $goals $EXTERNAL_VARS

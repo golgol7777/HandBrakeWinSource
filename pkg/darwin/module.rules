@@ -1,0 +1,54 @@
+pkg.create:: $(PKG.appcast) $(PKG.cli.dmg) $(PKG.gui.dmg)
+
+
+$(PKG.appcast): | $(dir $(PKG.appcast))
+$(PKG.appcast): $(PKG.gui.dmg)
+$(PKG.appcast): $(BUILD/)project/handbrake.m4
+$(PKG.appcast): $(PKG.in/)appcast.xml.m4
+	$(M4.exe) -I$(BUILD/)project \
+	    -D__APPCAST_dmg="$(notdir $(PKG.gui.dmg))" \
+	    -D__APPCAST_dmg_size="$(shell stat -f '%z' $(PKG.gui.dmg))" \
+	    $(PKG.in/)appcast.xml.m4 > $@
+
+$(PKG.cli.dmg): | $(dir $(PKG.cli.dmg))
+$(PKG.cli.dmg): | $(STAGE.out.cli/)
+	hdiutil create -srcfolder $(STAGE.out.cli/) -format UDRO -mode 755 \
+	    -volname $(basename $(notdir $@)) \
+	    -ov $(PKG.cli.tmp.dmg)
+	hdiutil convert -format UDBZ -o $@ $(PKG.cli.tmp.dmg)
+	$(RM.exe) $(PKG.cli.tmp.dmg)
+
+$(PKG.gui.dmg): | $(dir $(PKG.gui.dmg))
+$(PKG.gui.dmg): | $(STAGE.out.gui/)
+ifeq (1-darwin,$(FEATURE.xcode)-$(BUILD.system))
+	hdiutil create -srcfolder $(STAGE.out.gui/) -format UDRO -mode 755 \
+	    -volname $(basename $(notdir $@)) \
+	    -ov $(PKG.gui.tmp.dmg)
+	hdiutil convert -format UDBZ -o $@ $(PKG.gui.tmp.dmg)
+	$(RM.exe) $(PKG.gui.tmp.dmg)
+else
+	$(TOUCH.exe) $@
+endif
+
+$(STAGE.out.cli/):
+	$(MKDIR.exe) -p $@
+ifeq (1-darwin,$(FEATURE.xcode)-$(BUILD.system))
+	$(CP.exe) $(BUILD/)HandBrakeCLI $(STAGE.out.cli/)
+	$(call STAGE.doc,$(STAGE.out.cli/))
+else
+	$(CP.exe) $(TEST.exe) $(STAGE.cli/)
+	$(call STAGE.doc,$(STAGE.out.cli/))
+endif
+
+$(STAGE.out.gui/):
+	$(MKDIR.exe) -p $@
+ifeq (1-darwin,$(FEATURE.xcode)-$(BUILD.system))
+	$(CP.exe) -R $(BUILD/)HandBrake.app $(STAGE.out.gui/)
+	$(LIPO.exe) -thin $(BUILD.arch) \
+	    $(SRC/)macosx/Growl.framework/Versions/A/Growl \
+	    -output $(STAGE.out.gui/)HandBrake.app/Contents/Frameworks/Growl.framework/Versions/A/Growl
+	$(LIPO.exe) -thin $(BUILD.arch) \
+	    $(SRC/)macosx/Sparkle.framework/Versions/A/Sparkle \
+	    -output $(STAGE.out.gui/)HandBrake.app/Contents/Frameworks/Sparkle.framework/Versions/A/Sparkle
+	$(call STAGE.doc,$(STAGE.out.gui/))
+endif

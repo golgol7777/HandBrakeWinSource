@@ -1,0 +1,36 @@
+$(eval $(call import.MODULE.rules,TEST))
+
+test.build: $(TEST.exe)
+
+$(TEST.exe): | $(dir $(TEST.exe))
+$(TEST.exe): $(TEST.c.o)
+	$(call TEST.GCC.EXE++,$@,$^ $(TEST.libs))
+
+$(TEST.c.o): $(LIBHB.a)
+$(TEST.c.o): | $(dir $(TEST.c.o))
+$(TEST.c.o): $(BUILD/)%.o: $(SRC/)%.c
+	$(call TEST.GCC.C_O,$@,$<)
+
+test.clean:
+	$(RM.exe) -f $(TEST.out)
+
+###############################################################################
+
+build: test.build
+clean: test.clean
+
+###############################################################################
+
+## skip install/uninstall on darwin
+ifneq ($(BUILD.system),darwin)
+
+test.install: | $(dir $(TEST.install.exe))
+	$(CP.exe) $(TEST.exe) $(TEST.install.exe)
+
+test.uninstall:
+	$(RM.exe) -f $(TEST.install.exe)
+
+install: test.install
+uninstall: test.uninstall
+
+endif

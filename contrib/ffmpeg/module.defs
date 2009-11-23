@@ -1,0 +1,52 @@
+$(eval $(call import.MODULE.defs,FFMPEG,ffmpeg,BZIP2 FAAD2 ZLIB))
+$(eval $(call import.CONTRIB.defs,FFMPEG))
+
+FFMPEG.FETCH.url = http://download.m0k.org/handbrake/contrib/ffmpeg-r19067.tar.bz2
+
+FFMPEG.CONFIGURE.deps =
+FFMPEG.CONFIGURE.env  =
+FFMPEG.CONFIGURE.host =
+
+FFMPEG.CONFIGURE.extra = \
+    --disable-bsfs \
+    --disable-encoders \
+    --disable-ffmpeg \
+    --disable-ffserver \
+    --disable-muxers \
+    --disable-network \
+    --enable-bzlib \
+    --enable-encoder=ac3 \
+    --enable-encoder=mpeg4 \
+    --enable-encoder=snow \
+    --enable-gpl \
+    --enable-libfaad \
+    --enable-muxer=ipod \
+    --enable-zlib \
+    --cc="$(FFMPEG.GCC.gcc)" \
+    --extra-cflags="$(call fn.ARGS,FFMPEG.GCC,*archs *sysroot *minver ?extra) -I$(call fn.ABSOLUTE,$(CONTRIB.build/)include)" \
+    --extra-ldflags="$(call fn.ARGS,FFMPEG.GCC,*archs *sysroot *minver ?extra) -L$(call fn.ABSOLUTE,$(CONTRIB.build/)lib)"
+
+## check against tuple: B-SYSTEM where B is { 0 | 1 } for cross-compiling flag
+ifeq (0-cygwin,$(BUILD.cross)-$(BUILD.system))
+    FFMPEG.CONFIGURE.extra += --enable-pthreads --enable-memalign-hack
+    FFMPEG.GCC.args.extra = -fno-common
+else ifeq (darwin,$(BUILD.system))
+    ## section for darwin-archs
+    FFMPEG.CONFIGURE.extra += --enable-pthreads --enable-cross-compile --arch=$(BUILD.machine)
+else ifeq (1-mingw,$(BUILD.cross)-$(BUILD.system))
+    FFMPEG.CONFIGURE.extra += \
+        --enable-w32threads \
+        --enable-memalign-hack \
+        --target-os=mingw32 \
+        --enable-cross-compile --cross-prefix=$(BUILD.cross.prefix)
+    FFMPEG.GCC.args.extra += -fno-common
+else
+    FFMPEG.CONFIGURE.extra += --enable-pthreads
+endif
+
+#
+# MPC8 Doesn't compile on SPARC
+#
+ifeq (solaris,$(BUILD.system))
+    FFMPEG.CONFIGURE.extra += --disable-demuxer=mpc8
+endif
