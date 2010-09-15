@@ -1,0 +1,31 @@
+--- mpeg2dec/configure.orig	2009-11-24 18:45:27.000000000 +0900
++++ mpeg2dec/configure	2009-11-24 18:46:41.000000000 +0900
+@@ -4670,9 +4670,9 @@
+     fi
+ 
+ 
+-    TRY_CFLAGS=`echo "$OPT_CFLAGS $CFLAGS"|sed "s/-O[0-9]*//g"`
++    TRY_CFLAGS="$OPT_CFLAGS $CFLAGS"
+ 
+-    TRY_CFLAGS="$TRY_CFLAGS -O3"
++    TRY_CFLAGS="-O3 $TRY_CFLAGS"
+     { echo "$as_me:$LINENO: checking if $CC supports $TRY_CFLAGS flags" >&5
+ echo $ECHO_N "checking if $CC supports $TRY_CFLAGS flags... $ECHO_C" >&6; }
+     SAVE_CFLAGS="$CFLAGS"
+@@ -4859,11 +4859,11 @@
+ _ACEOF
+ 
+ 	case "$host" in
+-	i386-*) TRY_CFLAGS="$OPT_CFLAGS -mcpu=i386";;
+-	i486-*) TRY_CFLAGS="$OPT_CFLAGS -mcpu=i486";;
+-	i586-*) TRY_CFLAGS="$OPT_CFLAGS -mcpu=pentium";;
+-	i686-*) TRY_CFLAGS="$OPT_CFLAGS -mcpu=pentiumpro";;
+-	k6-*)   TRY_CFLAGS="$OPT_CFLAGS -mcpu=k6";;
++	i386-*) TRY_CFLAGS="-march=i386 $OPT_CFLAGS";;
++	i486-*) TRY_CFLAGS="-march=i486 $OPT_CFLAGS";;
++	i586-*) TRY_CFLAGS="-march=pentium $OPT_CFLAGS";;
++	i686-*) TRY_CFLAGS="-march=pentiumpro $OPT_CFLAGS";;
++	k6-*)   TRY_CFLAGS="-march=k6 $OPT_CFLAGS";;
+ 	esac
+ 	{ echo "$as_me:$LINENO: checking if $CC supports $TRY_CFLAGS $CFLAGS flags" >&5
+ echo $ECHO_N "checking if $CC supports $TRY_CFLAGS $CFLAGS flags... $ECHO_C" >&6; }
