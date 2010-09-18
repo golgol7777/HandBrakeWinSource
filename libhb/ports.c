@@ -342,7 +342,7 @@ static uint64_t hb_thread_to_integer( const hb_thread_t* t )
  *  + Get informed when the thread exits, so we know whether
  *    hb_thread_close() will block or not.
  ***********************************************************************/
-static void hb_thread_func( void * _t )
+static void __attribute__((force_align_arg_pointer)) hb_thread_func( void * _t )
 {
     hb_thread_t * t = (hb_thread_t *) _t;
 
