@@ -153,7 +153,7 @@ static int MKVInit( hb_mux_object_t * m )
     track->extra.video.displayHeight = job->height;
     if( job->anamorphic.mode )
     {
-        track->extra.video.displayWidth = job->width * ((double)job->anamorphic.par_width / (double)job->anamorphic.par_height);
+        track->extra.video.displayWidth = job->width * ((double)job->anamorphic.par_width / (double)job->anamorphic.par_height) + 0.5;
     }
     else
     {
