@@ -74,6 +74,7 @@ int encx264Init( hb_work_object_t * w, hb_job_t * job )
     x264_param_t       param;
     x264_nal_t       * nal;
     int                nal_count;
+    char               profile[16] = {0};
 
     hb_work_private_t * pv = calloc( 1, sizeof( hb_work_private_t ) );
     w->private_data = pv;
@@ -198,6 +199,12 @@ int encx264Init( hb_work_object_t * w, hb_job_t * job )
                 value++;
             }
 
+            if( !( strcmp( name, "profile" ) ) )
+            {
+                snprintf( profile, sizeof( profile ), "%s", value );
+                continue;
+            }
+
             /* Here's where the strings are passed to libx264 for parsing. */
             ret = x264_param_parse( &param, name, value );
 
@@ -293,6 +300,12 @@ int encx264Init( hb_work_object_t * w, hb_job_t * job )
                 param.rc.psz_stat_in = pv->filename;
                 break;
         }
+    }
+
+    if( profile[0] != '\0' )
+    {
+        x264_param_apply_profile( &param, profile );
+        hb_log("encx264: applying %s profile restrictions to encoder parameters", profile );
     }
 
     hb_deep_log( 2, "encx264: opening libx264 (pass %d)", job->pass );
