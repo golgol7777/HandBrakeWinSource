@@ -61,6 +61,8 @@ static int    decomb                = 0;
 static char * decomb_opt            = 0;
 static int    rotate                = 0;
 static char * rotate_opt            = 0;
+static int    colorspace            = 0;
+static char * colorspace_opt        = 0;
 static int    grayscale   = 0;
 static int    vcodec      = HB_VCODEC_FFMPEG_MPEG4;
 static hb_list_t * audios = NULL;
@@ -1301,6 +1303,12 @@ static int HandleEvents( hb_handle_t * h )
                 hb_filter_denoise.settings = denoise_opt;
                 hb_list_add( job->filters, &hb_filter_denoise );
             }
+            if( colorspace )
+            {
+                hb_filter_colorspace.settings = colorspace_opt;
+                hb_list_add( job->filters, &hb_filter_colorspace);
+            }
+
 
             switch( anamorphic_mode )
             {
@@ -2234,6 +2242,17 @@ static int HandleEvents( hb_handle_t * h )
                 job->color_matrix_code = color_matrix_code;
             }
 
+            if( colorspace )
+            {
+                int in, out;
+                if( 2 == sscanf( colorspace_opt, "%d:%d", &in, &out ) )
+                {
+                    if( out == 601 )
+                        job->color_matrix_code = 1;
+                    else if( out == 709 )
+                        job->color_matrix_code = 2;
+                }
+            }
             if( advanced_opts != NULL && *advanced_opts != '\0' )
             {
                 job->advanced_opts = advanced_opts;
@@ -2685,6 +2704,8 @@ static void ShowHelp()
      "          <QP:M>            (default 5:2)\n"
      "        --rotate            Flips images axes\n"
      "          <M>               (default 3)\n"
+     "        --colorspace        Do an explicit colorspace conversion\n"
+     "          <601:709 or 709:601>  (default Off)\n"
     "    -g, --grayscale         Grayscale encoding\n"
     "\n"
 
@@ -2892,6 +2913,7 @@ static int ParseOptions( int argc, char ** argv )
     #define AUDIO_GAIN          279
     #define ALLOWED_AUDIO_COPY  280
     #define AUDIO_FALLBACK      281
+    #define COLORSPACE_FILTER   282
     
     for( ;; )
     {
@@ -2941,6 +2963,7 @@ static int ParseOptions( int argc, char ** argv )
             { "decomb",      optional_argument, NULL,    '5' },
             { "grayscale",   no_argument,       NULL,    'g' },
             { "rotate",      optional_argument, NULL,   ROTATE_FILTER },
+            { "colorspace",  required_argument, NULL,   COLORSPACE_FILTER },
             { "strict-anamorphic",  no_argument, &anamorphic_mode, 1 },
             { "loose-anamorphic", no_argument, &anamorphic_mode, 2 },
             { "custom-anamorphic", no_argument, &anamorphic_mode, 3 },
@@ -3260,6 +3283,13 @@ static int ParseOptions( int argc, char ** argv )
                     rotate_opt = strdup( optarg );
                 }
                 rotate = 1;
+                break;
+            case COLORSPACE_FILTER:
+                if( optarg != NULL )
+                {
+                    colorspace_opt = strdup( optarg );
+                }
+                colorspace = 1;
                 break;
             case DISPLAY_WIDTH:
                 if( optarg != NULL )

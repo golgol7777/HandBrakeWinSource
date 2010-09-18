@@ -1680,6 +1680,12 @@ hb_filter_object_t * hb_get_filter_object(int filter_id, const char * settings)
         hb_filter_denoise.settings = (char*)settings;
         return &hb_filter_denoise;
     }
+
+    if (filter_id == HB_FILTER_COLORSPACE)
+    {
+        hb_filter_colorspace.settings = (char*)settings;
+        return &hb_filter_colorspace;
+    }
     return NULL;
 }
 

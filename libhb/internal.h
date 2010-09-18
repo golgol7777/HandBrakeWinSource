@@ -369,7 +369,8 @@ enum
     FILTER_DENOISE,
     FILTER_DETELECINE,
     FILTER_DECOMB,
-    FILTER_ROTATE
+    FILTER_ROTATE,
+    FILTER_COLORSPACE
 };
 
 // Picture flags used by filters

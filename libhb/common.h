@@ -833,6 +833,7 @@ struct hb_filter_object_s
 #define HB_FILTER_DENOISE       4
 #define HB_FILTER_DECOMB        5
 #define HB_FILTER_ROTATE        6
+#define HB_FILTER_COLORSPACE    7
 
 extern hb_filter_object_t hb_filter_detelecine;
 extern hb_filter_object_t hb_filter_deinterlace;
@@ -840,6 +841,7 @@ extern hb_filter_object_t hb_filter_deblock;
 extern hb_filter_object_t hb_filter_denoise;
 extern hb_filter_object_t hb_filter_decomb;
 extern hb_filter_object_t hb_filter_rotate;
+extern hb_filter_object_t hb_filter_colorspace;
 
 typedef void hb_error_handler_t( const char *errmsg );
 
