@@ -510,6 +510,74 @@ void hb_limit_rational64( int64_t *x, int64_t *y, int64_t num, int64_t den, int6
 }
 
 /**********************************************************************
+ * hb_get_itu_par
+ **********************************************************************
+ * Given a title info return itu_par value for the title.
+ * If title does not have valid resolution, just return par values of
+ * the title set by scan process.
+ *********************************************************************/
+void hb_get_itu_par( int *num, int *den, hb_job_t * job )
+{
+    hb_title_t * title = job->title;
+    double aspect = title->aspect;
+
+    if( title->width == 720 )
+    {
+        // convert aspect to a scaled integer so we can test for 16:9 & 4:3
+        // aspect ratios ignoring insignificant differences in the LSBs of
+        // the floating point representation.
+        int iaspect = aspect * 9.;
+
+        if (title->height == 480)
+        {
+            /* It's NTSC */
+            if (iaspect == 16)
+            {
+                /* It's widescreen */
+                *num = 40;
+                *den = 33;
+            }
+            else if (iaspect == 12)
+            {
+                /* It's 4:3 */
+                *num = 10;
+                *den = 11;
+            }
+        }
+        else if (title->height == 576)
+        {
+            /* It's PAL */
+            if(iaspect == 16)
+            {
+                /* It's widescreen */
+                *num = 16;
+                *den = 11;
+            }
+            else if (iaspect == 12)
+            {
+                /* It's 4:3 */
+                *num = 12;
+                *den = 11;
+            }
+        }
+    }
+    else if ( title->pixel_aspect_width && title->pixel_aspect_height )
+    {
+        *num = title->pixel_aspect_width;
+        *den = title->pixel_aspect_height;
+    }
+    else if ( aspect != 0.0 && aspect != 1.0 )
+    {
+        *num = title->height * title->aspect;
+        *den = title->width;
+    }
+    else
+    {
+        *num = *den = 1;
+    }
+}
+
+/**********************************************************************
  * hb_fix_aspect
  **********************************************************************
  * Given the output width (if HB_KEEP_WIDTH) or height

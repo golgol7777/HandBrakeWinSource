@@ -100,6 +100,8 @@ void hb_limit_rational64( int64_t *x, int64_t *y, int64_t num, int64_t den, int6
 #define HB_KEEP_HEIGHT 1
 void hb_fix_aspect( hb_job_t * job, int keep );
 
+void hb_get_itu_par( int *num, int *den, hb_job_t * job );
+
 hb_audio_t *hb_audio_copy(const hb_audio_t *src);
 void hb_audio_config_init(hb_audio_config_t * audiocfg);
 int hb_audio_add(const hb_job_t * job, const hb_audio_config_t * audiocfg);
