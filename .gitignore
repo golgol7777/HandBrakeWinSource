@@ -1,0 +1,9 @@
+.svn
+build
+AssemblyInfo.cs
+StyleCop.Cache
+bin
+obj
+*.suo
+MakeNightly.nsi
+AssemblyInfo.cs
