@@ -160,9 +160,13 @@ class Configure( object ):
     ## On success, returns full pathname of executable.
     ## On fail, returns None.
     def findExecutable( self, name ):
+        path_sep = re.compile( '\\\\' )
+
         if len( os.path.split(name)[0] ):
             if os.access( name, os.X_OK ):
-                return name
+                return path_sep.sub( '/', name )
+            if os.access( name + '.exe', os.X_OK ):
+                return path_sep.sub( '/', name )
             return None
         
         if not os.environ.has_key( 'PATH' ) or os.environ[ 'PATH' ] == '':
@@ -173,7 +177,9 @@ class Configure( object ):
         for dir in path.split( os.pathsep ):
             f = os.path.join( dir, name )
             if os.access( f, os.X_OK ):
-                return f
+                return path_sep.sub( '/', f )
+            if os.access( f + '.exe', os.X_OK ):
+                return path_sep.sub( '/', f )
         return None
 
     ## taken from python2.6 -- we need it
@@ -389,7 +395,7 @@ class LDProbe( Action ):
 
         os.remove( 'conftest.c' )
         if not self.fail:
-            os.remove( 'conftest' )
+            os.remove( 'conftest.exe' )
 
     def _dumpSession( self, printf ):
         printf( '  + %s\n', self.command )
@@ -411,7 +417,7 @@ class HostTupleProbe( ShellProbe, list ):
     GNU_TUPLE_RE = '([^-]+)-?([^-]*)-([^0-9-]+)([^-]*)-?([^-]*)'
 
     def __init__( self ):
-        super( HostTupleProbe, self ).__init__( 'host tuple', '%s/config.guess' % (cfg.dir), abort=True, head=True )
+        super( HostTupleProbe, self ).__init__( 'host tuple', 'sh %s/config.guess' % (cfg.dir), abort=True, head=True )
 
     def _parseSession( self ):
         if len(self.session):
@@ -964,16 +970,19 @@ class ConfigDocument:
         raise ValueError( 'element not found: %s' % (name) )
 
     def write( self, type ):
+        path_sep = re.compile( '\\\\' )
         if type == 'make':
             fname = 'GNUmakefile'
         elif type == 'm4':
-            fname = os.path.join( 'project', project.name_lower + '.m4' )
+            fname = path_sep.sub( '/', os.path.join( 'project', project.name_lower + '.m4' ) )
         else:
             raise ValueError, 'unknown file type: ' + type
 
         ftmp  = fname + '.tmp'
         try:
             try:
+                if os.access( ftmp, os.F_OK ):
+                    os.remove( ftmp )
                 file = cfg.open( ftmp, 'w' )
                 self.output( file, type )
             finally:
@@ -989,6 +998,8 @@ class ConfigDocument:
             cfg.errln( 'failed writing to %s\n%s', ftmp, x )
 
         try:
+            if os.access( fname, os.F_OK ):
+                os.remove( fname )
             os.rename( ftmp, fname )
         except Exception, x:
             cfg.errln( 'failed writing to %s\n%s', fname, x )
@@ -1326,7 +1337,7 @@ int main ()
   return 0;
 }
 """
-        pthread = LDProbe( 'static pthread', '%s -static' % Tools.gcc.pathname, '-lpthreadGC2', pthread_test )
+        pthread = LDProbe( 'static pthread', '%s -DPTW32_STATIC_LIB -static' % Tools.gcc.pathname, '-lpthreadGC2', pthread_test )
         pthread.run()
 
         bz2_test = """
@@ -1374,6 +1385,7 @@ int main ()
 
     ## add configure line for reconfigure purposes
     doc.addBlank()
+    path_sep = re.compile( '\\\\' )
     args = []
     for arg in Option.conf_args:
         args.append( arg[1] )
@@ -1447,12 +1459,12 @@ int main ()
     doc.add( 'CONF.method', options.conf_method )
 
     doc.addBlank()
-    doc.add( 'SRC',     cfg.src_final )
-    doc.add( 'SRC/',    cfg.src_final + os.sep )
-    doc.add( 'BUILD',   cfg.build_final )
-    doc.add( 'BUILD/',  cfg.build_final + os.sep )
-    doc.add( 'PREFIX',  cfg.prefix_final )
-    doc.add( 'PREFIX/', cfg.prefix_final + os.sep )
+    doc.add( 'SRC',     path_sep.sub( '/', cfg.src_final ) )
+    doc.add( 'SRC/',    path_sep.sub( '/', cfg.src_final + os.sep ) )
+    doc.add( 'BUILD',   path_sep.sub( '/', cfg.build_final ) )
+    doc.add( 'BUILD/',  path_sep.sub( '/', cfg.build_final + os.sep ) )
+    doc.add( 'PREFIX',  path_sep.sub( '/', cfg.prefix_final ) )
+    doc.add( 'PREFIX/', path_sep.sub( '/', cfg.prefix_final + os.sep ) )
     
     doc.addBlank()
     doc.add( 'FEATURE.asm',   'disabled' )
