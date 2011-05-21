@@ -16,6 +16,13 @@ extern "C" {
 /* Whether the Core Audio HE-AAC encoder is available on the system. */
 int encca_haac_available();
 
+/* Returns whether the QuickTime AAC encoder is available on the system. */
+/* Also reports available AAC profile. */
+/*  0 : No QuickTime AAC encoder is available */
+/*  1 : Only AAC-LC capable QuickTime AAC encoder is available */
+/*  2 : HE-AAC ready QuickTime AAC encoder is available */
+int encqt_aac_available( void );
+
 /* hb_init()
    Initializes a libhb session (launches his own thread, detects CPUs,
    etc) */

@@ -145,6 +145,8 @@ hb_work_object_t * hb_codec_encoder( int codec )
             w->codec_param = CODEC_ID_AC3;
             return w;
         }
+        case HB_ACODEC_QT_AAC: return hb_get_work( WORK_ENC_QT_AAC );
+        case HB_ACODEC_QT_HAAC:return hb_get_work( WORK_ENC_QT_HAAC );
     }
     return NULL;
 }
@@ -392,15 +394,21 @@ void hb_display_job_info( hb_job_t * job )
             }
             else
             {
-                hb_log( "   + encoder: %s", 
-                    ( audio->config.out.codec == HB_ACODEC_FAAC ) ?  "faac" : 
-                    ( ( audio->config.out.codec == HB_ACODEC_LAME ) ?  "lame" : 
-                    ( ( audio->config.out.codec == HB_ACODEC_CA_AAC ) ?  "ca_aac" : 
-                    ( ( audio->config.out.codec == HB_ACODEC_CA_HAAC ) ?  "ca_haac" : 
-                    ( ( audio->config.out.codec == HB_ACODEC_FFAAC ) ?  "ffaac" : 
-                    ( ( audio->config.out.codec == HB_ACODEC_AC3 ) ?  "ffac3" : 
-                    "vorbis"  ) ) ) ) ) );
-                hb_log( "     + bitrate: %d kbps, samplerate: %d Hz", audio->config.out.bitrate, audio->config.out.samplerate );            
+                const char *aenc_name = NULL;
+                switch( audio->config.out.codec )
+                {
+                    case HB_ACODEC_FAAC:    aenc_name = "faac";     break;
+                    case HB_ACODEC_LAME:    aenc_name = "lame";     break;
+                    case HB_ACODEC_CA_AAC:  aenc_name = "ca_aac";   break;
+                    case HB_ACODEC_CA_HAAC: aenc_name = "ca_haac";  break;
+                    case HB_ACODEC_QT_AAC:  aenc_name = "qt_aac";   break;
+                    case HB_ACODEC_QT_HAAC: aenc_name = "qt_haac";  break;
+                    case HB_ACODEC_FFAAC:   aenc_name = "ffaac";    break;
+                    case HB_ACODEC_AC3:     aenc_name = "ffac3";    break;
+                    default:                aenc_name = "vorbis";
+                }
+                hb_log( "   + encoder: %s", aenc_name );
+                hb_log( "     + bitrate: %d kbps, samplerate: %d Hz", audio->config.out.bitrate, audio->config.out.samplerate );
             }
         }
     }
@@ -646,6 +654,36 @@ static void do_job( hb_job_t * job )
                 hb_log( "Sample rate %d not supported (ca_haac). Using 32kHz for track %d",
                         audio->config.out.samplerate, audio->config.out.track );
                 audio->config.out.samplerate = 32000;
+            }
+        }
+        if( audio->config.out.codec == HB_ACODEC_QT_AAC || audio->config.out.codec == HB_ACODEC_QT_HAAC )
+        {
+            int ret = encqt_aac_available();
+
+            if( audio->config.out.codec == HB_ACODEC_QT_HAAC )
+            {
+                if( ret != 2 )
+                {
+                    // QuickTime HE-AAC is requested but the encoder is unavailable
+                    hb_log( "QuickTime HE-AAC unavailable. Using %s for track %d",
+                            ret == 1 ? "QuickTime AAC" : "faac",
+                            audio->config.out.track );
+                    audio->config.out.codec = ret == 1 ? HB_ACODEC_QT_AAC : HB_ACODEC_FAAC;
+                }
+                else if( audio->config.out.samplerate < 32000 )
+                {
+                    // QuickTime HE-AAC doesn't support samplerates < 32 kHz
+                    hb_log( "Sample rate %d not supported (qt_haac). Using 32kHz for track %d",
+                            audio->config.out.samplerate, audio->config.out.track );
+                    audio->config.out.samplerate = 32000;
+                }
+            }
+            else if( audio->config.out.codec == HB_ACODEC_QT_AAC && ret < 1 )
+            {
+                // QuickTime HE-AAC is requested but the encoder is unavailable
+                hb_log( "QuickTime AAC unavailable. Using faac for track %d",
+                        audio->config.out.track );
+                audio->config.out.codec = HB_ACODEC_FAAC;
             }
         }
         /* Adjust output track number, in case we removed one.

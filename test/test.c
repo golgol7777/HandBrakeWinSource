@@ -3731,6 +3731,24 @@ static int get_acodec_for_string( char *codec )
         return HB_ACODEC_CA_HAAC;
     }
 #endif
+    else if( !strcasecmp( codec, "qt_aac") )
+    {
+#if defined( __MINGW32__ ) && defined( USE_QT_AAC )
+        return HB_ACODEC_QT_AAC;
+#else
+        fprintf( stderr, "QuickTime AAC Encoder is not compiled in. Switching to FAAC ...\n" );
+        return HB_ACODEC_FAAC;
+#endif
+    }
+    else if( !strcasecmp( codec, "qt_haac") )
+    {
+#if defined( __MINGW32__ ) && defined( USE_QT_AAC )
+        return HB_ACODEC_QT_HAAC;
+#else
+        fprintf( stderr, "QuickTime HE-AAC Encoder is not compiled in. Switching to FAAC ...\n" );
+        return HB_ACODEC_FAAC;
+#endif
+    }
     else
     {
         return -1;

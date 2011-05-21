@@ -232,6 +232,8 @@ static int MKVInit( hb_mux_object_t * m )
             case HB_ACODEC_FFAAC:
             case HB_ACODEC_CA_AAC:
             case HB_ACODEC_CA_HAAC:
+            case HB_ACODEC_QT_AAC:
+            case HB_ACODEC_QT_HAAC:
                 track->codecPrivate = audio->priv.config.aac.bytes;
                 track->codecPrivateSize = audio->priv.config.aac.length;
                 track->codecID = MK_ACODEC_AAC;

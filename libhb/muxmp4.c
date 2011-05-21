@@ -374,6 +374,8 @@ static int MP4Init( hb_mux_object_t * m )
             case HB_ACODEC_FFAAC:
             case HB_ACODEC_CA_AAC:
             case HB_ACODEC_CA_HAAC:
+            case HB_ACODEC_QT_AAC:
+            case HB_ACODEC_QT_HAAC:
             case HB_ACODEC_LAME:
             case HB_ACODEC_MP3:
             case HB_ACODEC_DCA_HD:
@@ -389,6 +391,8 @@ static int MP4Init( hb_mux_object_t * m )
                     case HB_ACODEC_FFAAC:
                     case HB_ACODEC_CA_AAC:
                     case HB_ACODEC_CA_HAAC:
+                    case HB_ACODEC_QT_AAC:
+                    case HB_ACODEC_QT_HAAC:
                     {
                         audio_type = MP4_MPEG4_AUDIO_TYPE;
                         config_bytes = audio->priv.config.aac.bytes;

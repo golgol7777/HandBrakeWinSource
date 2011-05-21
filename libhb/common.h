@@ -317,7 +317,7 @@ struct hb_job_s
 
 /* Audio starts here */
 /* Audio Codecs */
-#define HB_ACODEC_MASK      0x000FFF00
+#define HB_ACODEC_MASK      0x00FFFF00
 #define HB_ACODEC_FAAC      0x00000100
 #define HB_ACODEC_LAME      0x00000200
 #define HB_ACODEC_VORBIS    0x00000400
@@ -331,6 +331,8 @@ struct hb_job_s
 #define HB_ACODEC_DCA_HD    0x00040000
 #define HB_ACODEC_MP3       0x00080000
 #define HB_ACODEC_FF_MASK   0x000f0000
+#define HB_ACODEC_QT_AAC    0x00100000
+#define HB_ACODEC_QT_HAAC   0x00200000
 #define HB_ACODEC_PASS_FLAG 0x40000000
 #define HB_ACODEC_PASS_MASK (HB_ACODEC_MP3 | HB_ACODEC_FFAAC | HB_ACODEC_DCA_HD | HB_ACODEC_AC3 | HB_ACODEC_DCA)
 #define HB_ACODEC_MP3_PASS  (HB_ACODEC_MP3 | HB_ACODEC_PASS_FLAG)
@@ -804,6 +806,8 @@ extern hb_work_object_t hb_muxer;
 extern hb_work_object_t hb_encca_aac;
 extern hb_work_object_t hb_encca_haac;
 extern hb_work_object_t hb_encavcodeca;
+extern hb_work_object_t hb_encqt_aac;
+extern hb_work_object_t hb_encqt_haac;
 extern hb_work_object_t hb_reader;
 
 #define FILTER_OK      0

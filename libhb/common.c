@@ -31,7 +31,8 @@ int hb_audio_rates_count   = sizeof( hb_audio_rates ) /
 int hb_audio_rates_default = 3; /* 44100 Hz */
 
 hb_rate_t hb_audio_bitrates[] =
-{ {  "32",  32 }, {  "40",  40 }, {  "48",  48 }, {  "56",  56 },
+{ {  "12",  12 }, {  "16",  16 }, {  "24",  24 },
+  {  "32",  32 }, {  "40",  40 }, {  "48",  48 }, {  "56",  56 },
   {  "64",  64 }, {  "80",  80 }, {  "96",  96 }, { "112", 112 },
   { "128", 128 }, { "160", 160 }, { "192", 192 }, { "224", 224 },
   { "256", 256 }, { "320", 320 }, { "384", 384 }, { "448", 448 },
@@ -120,11 +121,13 @@ ffac3
 48kHz       636 (640)           636 (640)           636 (640)
 
 Core Audio AAC (core audio api provides range of allowed bitrates)
+QuickTime AAC also has same bitrate limits.
 24kHz       16-64               32-128              80-320
 32kHz       24-96               48-192              128-448
 48kHz       32-256              64-320              160-768
 
 Core Audio HE-AAC (core audio api provides range of allowed bitrates)
+QuickTime HE-AAC also has same bitrate limits.
 32kHz       12-40               24-80               64-192
 48kHz       16-40               32-80               80-192
 */
@@ -149,6 +152,7 @@ void hb_get_audio_bitrate_limits(uint32_t codec, int samplerate, int mixdown, in
             break;
 
         case HB_ACODEC_CA_AAC:
+        case HB_ACODEC_QT_AAC:
             if (samplerate > 32000)
             {
                 *low = channels * 32;
@@ -185,6 +189,7 @@ void hb_get_audio_bitrate_limits(uint32_t codec, int samplerate, int mixdown, in
             break;
 
         case HB_ACODEC_CA_HAAC:
+        case HB_ACODEC_QT_HAAC:
             if (samplerate > 32000)
             {
                 *low = channels * 16;
@@ -321,6 +326,7 @@ int hb_get_default_audio_bitrate( uint32_t codec, int samplerate, int mixdown )
                 bitrate = 640;
             break;
         case HB_ACODEC_CA_HAAC:
+        case HB_ACODEC_QT_HAAC:
             bitrate = channels * 32;
             break;
         default:

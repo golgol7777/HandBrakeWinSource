@@ -452,6 +452,10 @@ hb_handle_t * hb_init( int verbose, int update_check )
 #endif
 	hb_register( &hb_encavcodeca );
 	hb_register( &hb_reader );
+#if defined( __MINGW32__ ) && defined ( USE_QT_AAC )
+	hb_register( &hb_encqt_aac );
+	hb_register( &hb_encqt_haac );
+#endif
     
     return h;
 }
@@ -553,6 +557,10 @@ hb_handle_t * hb_init_dl( int verbose, int update_check )
 #endif
 	hb_register( &hb_encavcodeca );
 	hb_register( &hb_reader );
+#if defined( __MINGW32__ ) && defined ( USE_QT_AAC )
+	hb_register( &hb_encqt_aac );
+	hb_register( &hb_encqt_haac );
+#endif
 
 	return h;
 }
@@ -1997,3 +2005,29 @@ int encca_haac_available()
     return 0;
 #endif
 }
+
+/************************************************************************
+ * encqt_aac_available()
+ ************************************************************************
+ * Returns whether the QuickTime AAC encoder is available on the system.
+ * This function always returns 0 if the system meets one of the conditions
+ * listed below:
+ *  - a platform other than Windows
+ *  - a Windows platform without QuickTime installed
+ *  - CLI is not compiled with QuickTime AAC support
+ * Also reports available AAC profile on the system and register QuickTime
+ * HE-AAC encoder components if available.
+ *  0 : No QuickTime AAC encoder is available
+ *  1 : Only AAC-LC capable QuickTime AAC encoder is available
+ *  2 : HE-AAC ready QuickTime AAC encoder is available
+ ************************************************************************/
+int encqt_aac_available( void )
+{
+#if defined( __MINGW32__ ) && defined ( USE_QT_AAC )
+    extern int encqt_aac_available_profile( void );
+    return encqt_aac_available_profile();
+#else
+    return 0;
+#endif
+}
+
