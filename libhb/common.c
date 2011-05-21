@@ -623,24 +623,33 @@ void hb_fix_aspect( hb_job_t * job, int keep )
         }
     }
 
-    double par = (double)title->width / ( (double)title->height * title->aspect );
-    double cropped_sar = (double)( title->height - job->crop[0] - job->crop[1] ) /
-                         (double)( title->width - job->crop[2] - job->crop[3] );
-    double ar = par * cropped_sar;
+    double par = (double)title->pixel_aspect_width / title->pixel_aspect_height;
+    double cropped_sar = (double)( title->width - job->crop[2] - job->crop[3] ) /
+                         (double)( title->height - job->crop[0] - job->crop[1] );
+    double ar;
+
+    if( job->anamorphic.itu_par )
+    {
+        int source_par_width, source_par_height;
+        hb_get_itu_par( &source_par_width, &source_par_height, job );
+        par = (double)source_par_width / source_par_height;
+    }
+
+    ar = par * cropped_sar;
 
     // Dimensions must be greater than minimum and multiple of modulus
     if( keep == HB_KEEP_WIDTH )
     {
         job->width  = MULTIPLE_MOD( job->width, modulus );
         job->width  = MAX( min_width, job->width );
-        job->height = MULTIPLE_MOD( (uint64_t)( (double)job->width * ar ), modulus );
+        job->height = MULTIPLE_MOD( (uint64_t)( (double)job->width / ar ), modulus );
         job->height = MAX( min_height, job->height );
     }
     else
     {
         job->height = MULTIPLE_MOD( job->height, modulus );
         job->height = MAX( min_height, job->height );
-        job->width  = MULTIPLE_MOD( (uint64_t)( (double)job->height / ar ), modulus );
+        job->width  = MULTIPLE_MOD( (uint64_t)( (double)job->height * ar ), modulus );
         job->width  = MAX( min_width, job->width );
     }
 }

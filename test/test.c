@@ -97,6 +97,7 @@ static int    subtitle_scan = 0;
 static int    width       = 0;
 static int    height      = 0;
 static int    crop[4]     = { -1,-1,-1,-1 };
+static int    pad[4]      = {  0, 0, 0, 0 };
 static int    vrate       = 0;
 static float  vquality    = -1.0;
 static int    vbitrate    = 0;
@@ -108,6 +109,7 @@ static int    par_width     = 0;
 static int    display_width = 0;
 static int    keep_display_aspect = 0;
 static int    itu_par       = 0;
+static int    auto_fitting  = 0;
 static int    angle = 0;
 static int    chapter_start = 0;
 static int    chapter_end   = 0;
@@ -1309,15 +1311,35 @@ static int HandleEvents( hb_handle_t * h )
                 hb_list_add( job->filters, &hb_filter_colorspace);
             }
 
+            if( modulus )
+            {
+                 job->modulus = modulus;
+            }
+
+            if( itu_par )
+            {
+                 job->anamorphic.itu_par = 1;
+                 if( anamorphic_mode )
+                     hb_get_itu_par( &job->anamorphic.par_width, &job->anamorphic.par_height, job );
+            }
+
+            if( anamorphic_mode == 0 && auto_fitting )
+            {
+                job->auto_fitting = 1;
+            }
+
+            if( anamorphic_mode == 0 || anamorphic_mode == 3 )
+            {
+                memcpy( job->pad, pad, 4*sizeof(int) );
+            }
+            else
+            {
+                memset( job->pad, 0, 4*sizeof(int) );
+            }
 
             switch( anamorphic_mode )
             {
                 case 0: // Non-anamorphic
-                    
-                    if (modulus)
-                    {
-                        job->modulus = modulus;
-                    }
                     
                     if( width && height )
                     {
@@ -1360,16 +1382,6 @@ static int HandleEvents( hb_handle_t * h )
                 case 2: // Loose anamorphic
                     job->anamorphic.mode = 2;
                     
-                    if (modulus)
-                    {
-                        job->modulus = modulus;
-                    }
-                    
-                    if( itu_par )
-                    {
-                        job->anamorphic.itu_par = itu_par;
-                    }
-                    
                     if( width )
                     {
                         job->width = width;
@@ -1385,16 +1397,6 @@ static int HandleEvents( hb_handle_t * h )
                 case 3: // Custom Anamorphic 3: Power User Jamboree 
                     job->anamorphic.mode = 3;
                     
-                    if (modulus)
-                    {
-                        job->modulus = modulus;
-                    }
-                    
-                    if( itu_par )
-                    {
-                        job->anamorphic.itu_par = itu_par;
-                    }
-                    
                     if( par_width && par_height )
                     {
                         job->anamorphic.par_width = par_width;
@@ -1408,13 +1410,18 @@ static int HandleEvents( hb_handle_t * h )
                         /* First, what *is* the display aspect? */
                         int cropped_width = title->width - job->crop[2] - job->crop[3];
                         int cropped_height = title->height - job->crop[0] - job->crop[1];
+
+                        double source_par = (double)title->pixel_aspect_width / title->pixel_aspect_height;
                         
-                        /* XXX -- I'm assuming people want to keep the source
-                           display AR even though they might have already
-                           asked for ITU values instead. */
-                        float source_display_width = (float)cropped_width *
-                            (float)title->pixel_aspect_width / (float)title->pixel_aspect_height;
-                        float display_aspect = source_display_width / (float)cropped_height;
+                        if( itu_par )
+                        {
+                            int w, h;
+                            hb_get_itu_par( &w, &h, job );
+                            source_par = (double)w / h;
+                        }
+
+                        double display_aspect = cropped_width * source_par / cropped_height;
+
                         /* When keeping display aspect, we have to rank some values
                            by priority in order to consistently handle situations
                            when more than one might be specified by default.
@@ -2672,11 +2679,16 @@ static void ShowHelp()
     "      <PARX:PARY>\n"
     "                            (--display-width and --pixel-aspect are mutually\n"
     "                             exclusive and the former will override the latter)\n"
-    "    --itu-par               Use wider, ITU pixel aspect values for loose and\n"
-    "                            custom anamorphic, useful with underscanned sources\n"
+    "    --itu-par               Use wider, ITU pixel aspect values for anamorphic\n"
+    "                            calculations, useful with underscanned sources\n"
     "    --modulus               Set the number you want the scaled pixel dimensions\n"
     "      <number>              to divide cleanly by. Does not affect strict\n"
     "                            anamorphic mode, which is always mod 2 (default: 16)\n"
+    "    --pad <T:B:L:R>         Set video padding values (default: 0:0:0:0)\n"
+    "                            Only available with anamorphic none/custom and values\n"
+    "                            will be rounded to nearest multiple of modulus.\n"
+    "    --auto-fitting          Automatically padding image to fit specified resolution\n"
+    "                            with keeping aspect ratio\n"
     "    -M  --color-matrix      Set the color space signaled by the output\n"
     "          <601 or 709>      (Bt.601 is mostly for SD content, Bt.709 for HD,\n"
     "                             default: set by resolution)\n"
@@ -2914,6 +2926,8 @@ static int ParseOptions( int argc, char ** argv )
     #define ALLOWED_AUDIO_COPY  280
     #define AUDIO_FALLBACK      281
     #define COLORSPACE_FILTER   282
+    #define PADDING             283
+    #define AUTOFITTING         284
     
     for( ;; )
     {
@@ -2975,6 +2989,8 @@ static int ParseOptions( int argc, char ** argv )
             { "width",       required_argument, NULL,    'w' },
             { "height",      required_argument, NULL,    'l' },
             { "crop",        required_argument, NULL,    'n' },
+            { "pad",         required_argument, NULL, PADDING },
+            { "auto-fitting", no_argument, &auto_fitting, 1 },
 
             { "vb",          required_argument, NULL,    'b' },
             { "quality",     required_argument, NULL,    'q' },
@@ -3498,6 +3514,19 @@ static int ParseOptions( int argc, char ** argv )
             case MIN_DURATION:
                 min_title_duration = strtol( optarg, NULL, 0 );
                 break;
+            case PADDING:
+            {
+                int ret = sscanf( optarg, "%d:%d:%d:%d", &pad[0], &pad[1], &pad[2], &pad[3]);
+
+                if( ret != 4 ||
+                    ( pad[0] < 0 || pad[1] < 0 || pad[2] < 0 || pad[3] < 0 ) )
+                {
+                    fprintf( stderr, "invalid padding settings %s\n", optarg );
+                    pad[0] = pad[1] = pad[2] = pad[3] = 0;
+                    break;
+                }
+                break;
+            }
             default:
                 fprintf( stderr, "unknown option (%s)\n", argv[cur_optind] );
                 return -1;

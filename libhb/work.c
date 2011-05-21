@@ -242,22 +242,28 @@ void hb_display_job_info( hb_job_t * job )
         {
             hb_log( "     + keeping source display aspect ratio"); 
         }
-        hb_log( "     + storage dimensions: %d * %d -> %d * %d, crop %d/%d/%d/%d, mod %i",
+        hb_log( "     + storage dimensions: %d * %d -> %d * %d, crop %d/%d/%d/%d, pad %d/%d/%d/%d, mod %i",
                     title->width, title->height, job->width, job->height,
-                    job->crop[0], job->crop[1], job->crop[2], job->crop[3], job->modulus );
+                    job->crop[0], job->crop[1], job->crop[2], job->crop[3],
+                    job->pad[0], job->pad[1], job->pad[2], job->pad[3],
+                    job->modulus ? job->modulus : 16 );
         if( job->anamorphic.itu_par )
         {
             hb_log( "     + using ITU pixel aspect ratio values"); 
         }
         hb_log( "     + pixel aspect ratio: %i / %i", job->anamorphic.par_width, job->anamorphic.par_height );
-        hb_log( "     + display dimensions: %.0f * %i",
-            (float)( job->width * job->anamorphic.par_width / job->anamorphic.par_height ), job->height );
+        hb_log( "     + display dimensions: %.3f * %i",
+            ( (float)job->width * job->anamorphic.par_width / job->anamorphic.par_height ), job->height );
     }
     else
     {
-        hb_log( "   + dimensions: %d * %d -> %d * %d, crop %d/%d/%d/%d, mod %i",
+        hb_log( "   + dimensions: %d * %d -> %d * %d, crop %d/%d/%d/%d, pad %d/%d/%d/%d, mod %i",
                 title->width, title->height, job->width, job->height,
-                job->crop[0], job->crop[1], job->crop[2], job->crop[3], job->modulus );
+                job->crop[0], job->crop[1], job->crop[2], job->crop[3],
+                job->pad[0], job->pad[1], job->pad[2], job->pad[3],
+                job->modulus ? job->modulus : 16 );
+        if( job->anamorphic.itu_par )
+            hb_log( "   +             (assume source has ITU pixel aspect ratio values)" );
     }
 
     if ( job->grayscale )
@@ -473,22 +479,89 @@ static void do_job( hb_job_t * job )
         }
     }
     
-    /* Keep width and height within these boundaries,
-       but ignore for anamorphic. For "loose" anamorphic encodes,
-       this stuff is covered in the pixel_ratio section above.    */
-    if ( job->maxHeight && ( job->height > job->maxHeight ) && ( !job->anamorphic.mode ) )
+    if( !job->auto_fitting )
     {
-        job->height = job->maxHeight;
-        hb_fix_aspect( job, HB_KEEP_HEIGHT );
-        hb_log( "Height out of bounds, scaling down to %i", job->maxHeight );
-        hb_log( "New dimensions %i * %i", job->width, job->height );
+        /* Keep width and height within these boundaries,
+           but ignore for anamorphic. For "loose" anamorphic encodes,
+           this stuff is covered in the pixel_ratio section above.    */
+        if ( job->maxHeight && ( job->height > job->maxHeight ) && ( !job->anamorphic.mode ) )
+        {
+            job->height = job->maxHeight;
+            hb_fix_aspect( job, HB_KEEP_HEIGHT );
+            hb_log( "Height out of bounds, scaling down to %i", job->maxHeight );
+            hb_log( "New dimensions %i * %i", job->width, job->height );
+        }
+        if ( job->maxWidth && ( job->width > job->maxWidth ) && ( !job->anamorphic.mode ) )
+        {
+            job->width = job->maxWidth;
+            hb_fix_aspect( job, HB_KEEP_WIDTH );
+            hb_log( "Width out of bounds, scaling down to %i", job->maxWidth );
+            hb_log( "New dimensions %i * %i", job->width, job->height );
+        }
+
+        if( job->pad[0] || job->pad[1] || job->pad[2] || job->pad[3] )
+        {
+            int modulus = job->modulus ? job->modulus : 16;
+
+            for( i = 0; i < 4; i++ )
+            {
+                // Sanity check crop values are zero or positive multiples of 2
+                if( i < 2 )
+                {
+                    // Top, bottom
+                    job->pad[i] = MIN( EVEN( job->pad[i] ), EVEN( title->height/2 ) );
+                    job->pad[i] = MAX( 0, job->pad[i] );
+                    job->pad[i] = MULTIPLE_MOD( (uint64_t)job->pad[i], modulus );
+                }
+                else
+                {
+                    // Left, right
+                    job->pad[i] = MIN( EVEN( job->pad[i] ), EVEN( title->width/2 ) );
+                    job->pad[i] = MAX( 0, job->pad[i] );
+                    job->pad[i] = MULTIPLE_MOD( (uint64_t)job->pad[i], modulus );
+                }
+            }
+
+            job->height += job->pad[0] + job->pad[1];
+            job->width += job->pad[2] + job->pad[3];
+        }
     }
-    if ( job->maxWidth && ( job->width > job->maxWidth ) && ( !job->anamorphic.mode ) )
+    else
     {
-        job->width = job->maxWidth;
-        hb_fix_aspect( job, HB_KEEP_WIDTH );
-        hb_log( "Width out of bounds, scaling down to %i", job->maxWidth );
-        hb_log( "New dimensions %i * %i", job->width, job->height );
+        int modulus     = job->modulus ? job->modulus : 16;
+        int img_w, img_h;
+        int title_w = title->width  - ( job->crop[2] + job->crop[3] );
+        int title_h = title->height - ( job->crop[0] + job->crop[1] );
+        int par_w = title->pixel_aspect_width;
+        int par_h = title->pixel_aspect_height;
+        int dar_w, dar_h;
+        int score;
+
+        if( job->anamorphic.itu_par )
+            hb_get_itu_par( &par_w, &par_h, job );
+
+        job->width  = MULTIPLE_MOD( (uint64_t)job->width, modulus );
+        job->height = MULTIPLE_MOD( (uint64_t)job->height, modulus );
+        dar_w = title_w * par_w;
+        dar_h = title_h * par_h;
+        score = job->width*dar_h - job->height*dar_w;
+
+        if( score <= 0 )
+        {
+            img_w = job->width;
+            img_h = MULTIPLE_MOD( (uint64_t)((double)job->width*dar_h/dar_w + 0.5), 2 );
+            job->pad[0] = MULTIPLE_MOD( (uint64_t)((job->height-img_h) / 2), 2 );
+            job->pad[1] = job->height - ( img_h + job->pad[0] );
+            job->pad[2] = job->pad[3] = 0;
+        }
+        else
+        {
+            img_w = MULTIPLE_MOD( (uint64_t)((double)job->height*dar_w/dar_h + 0.5), 2 );
+            img_h = job->height;
+            job->pad[2] = MULTIPLE_MOD( (uint64_t)((job->width-img_w) / 2), 2 );
+            job->pad[3] = job->width - ( img_w + job->pad[2] );
+            job->pad[0] = job->pad[1] = 0;
+        }
     }
 
     if ( job->cfr == 0 )

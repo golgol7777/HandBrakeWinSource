@@ -14,6 +14,7 @@ struct hb_work_private_s
     struct SwsContext  * context;
     AVPicture            pic_tmp_in;
     AVPicture            pic_tmp_crop;
+    AVPicture            pic_tmp_scale;
     AVPicture            pic_tmp_out;
     hb_buffer_t        * buf_scale;
     hb_fifo_t          * subtitle_queue;
@@ -32,6 +33,9 @@ struct hb_work_private_s
     uint64_t             out_last_stop;     // where last frame ended (for CFR/PFR)
     int                  drops;             // frames dropped (for CFR/PFR)
     int                  dups;              // frames duped (for CFR/PFR)
+    int                  padcolor[3];       // padding color
+    int                  cropping;
+    int                  padding;
 };
 
 int  renderInit( hb_work_object_t *, hb_job_t * );
@@ -531,7 +535,7 @@ int renderWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
     }
 
     /* Apply crop/scale if specified */
-    if( buf_tmp_in && pv->context )
+    if( buf_tmp_in )
     {
         avpicture_fill( &pv->pic_tmp_in, buf_tmp_in->data,
                         PIX_FMT_YUV420P,
@@ -541,16 +545,46 @@ int renderWork( hb_work_object_t * w, hb_buffer_t ** buf_in,
                         PIX_FMT_YUV420P,
                         job->width, job->height );
 
-        // Crop; this alters the pointer to the data to point to the correct place for cropped frame
-        av_picture_crop( &pv->pic_tmp_crop, &pv->pic_tmp_in, PIX_FMT_YUV420P,
-                         job->crop[0], job->crop[2] );
+        pv->pic_tmp_crop = pv->pic_tmp_in;
+        /* Apply crop if specified */
+        if( pv->cropping )
+        {
+            // Crop; this alters the pointer to the data to point to the correct place for cropped frame
+            av_picture_crop( &pv->pic_tmp_crop, &pv->pic_tmp_in, PIX_FMT_YUV420P,
+                             job->crop[0], job->crop[2] );
+        }
 
-        // Scale pic_crop into pic_render according to the context set up in renderInit
-        sws_scale(pv->context,
-                  (const uint8_t* const *)pv->pic_tmp_crop.data, 
-                  pv->pic_tmp_crop.linesize,
-                  0, title->height - (job->crop[0] + job->crop[1]),
-                  pv->pic_tmp_out.data,  pv->pic_tmp_out.linesize);
+        pv->pic_tmp_scale = pv->pic_tmp_out;
+        // Crop for padding; this alters the pointer to the buffer to point to the correct place
+        //                   for scaled frame.
+        if( pv->padding )
+        {
+            av_picture_crop( &pv->pic_tmp_scale, &pv->pic_tmp_out, PIX_FMT_YUV420P,
+                             job->pad[0], job->pad[2] );
+        }
+
+        /* Apply scaling if specified, or just copy all plane to scaler buffer */
+        if( pv->context )
+        {
+            // Scale pic_crop into pic_scale according to the context set up in renderInit
+            sws_scale(pv->context,
+                      (const uint8_t* const *)pv->pic_tmp_crop.data,
+                      pv->pic_tmp_crop.linesize,
+                      0, title->height - (job->crop[0] + job->crop[1]),
+                      pv->pic_tmp_scale.data,  pv->pic_tmp_scale.linesize);
+        }
+        else
+            av_picture_copy( &pv->pic_tmp_scale, &pv->pic_tmp_crop, PIX_FMT_YUV420P,
+                             job->width - (job->pad[2] + job->pad[3]),
+                             job->height - (job->pad[0] + job->pad[1]) );
+
+        // Apply padding
+        if( pv->padding )
+        {
+            av_picture_pad( &pv->pic_tmp_out, &pv->pic_tmp_scale,
+                             job->height, job->width, PIX_FMT_YUV420P,
+                             job->pad[0], job->pad[1], job->pad[2], job->pad[3], pv->padcolor );
+        }
 
         hb_buffer_copy_settings( buf_render, buf_tmp_in );
 
@@ -732,16 +766,32 @@ int renderInit( hb_work_object_t * w, hb_job_t * job )
 
     /* Get title and title size */
     hb_title_t * title = job->title;
+    int title_cropped_width  = title->width  - (job->crop[2] + job->crop[3]);
+    int title_cropped_height = title->height - (job->crop[0] + job->crop[1]);
+    int scaler_dest_width    = job->width  - (job->pad[2] + job->pad[3] );
+    int scaler_dest_height   = job->height - (job->pad[0] + job->pad[1] );
 
     /* If crop or scale is specified, setup rescale context */
-    if( job->crop[0] || job->crop[1] || job->crop[2] || job->crop[3] ||
-        job->width != title->width || job->height != title->height )
+    if( ( title_cropped_width  != scaler_dest_width ) ||
+        ( title_cropped_height != scaler_dest_height ) )
     {
-        pv->context = hb_sws_get_context(title->width  - (job->crop[2] + job->crop[3]),
-                                     title->height - (job->crop[0] + job->crop[1]),
+        pv->context = hb_sws_get_context(title_cropped_width,
+                                     title_cropped_height,
                                      PIX_FMT_YUV420P,
-                                     job->width, job->height, PIX_FMT_YUV420P,
+                                     scaler_dest_width,
+                                     scaler_dest_height,
+                                     PIX_FMT_YUV420P,
                                      swsflags);
+    }
+
+    if( job->crop[0] || job->crop[1] || job->crop[2] || job->crop[3] )
+        pv->cropping = 1;
+
+    if( job->pad[0] || job->pad[1] || job->pad[2] || job->pad[3] )
+    {
+        pv->padding = 1;
+        pv->padcolor[0] = 16;
+        pv->padcolor[1] = pv->padcolor[2] = 128;
     }
 
     /* Setup FIFO queue for subtitle cache */

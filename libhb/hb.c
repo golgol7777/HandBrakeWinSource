@@ -948,58 +948,20 @@ void hb_set_anamorphic_size( hb_job_t * job,
     int cropped_height = title->height - job->crop[0] - job->crop[1] ;
     double storage_aspect = (double)cropped_width / (double)cropped_height;
     int mod = job->modulus ? job->modulus : 16;
-    double aspect = title->aspect;
     
     int pixel_aspect_width  = job->anamorphic.par_width;
     int pixel_aspect_height = job->anamorphic.par_height;
+    int source_pixel_aspect_width  = title->pixel_aspect_width;
+    int source_pixel_aspect_height = title->pixel_aspect_height;
 
     /* If a source was really NTSC or PAL and the user specified ITU PAR
        values, replace the standard PAR values with the ITU broadcast ones. */
-    if( title->width == 720 && job->anamorphic.itu_par )
-    {
-        // convert aspect to a scaled integer so we can test for 16:9 & 4:3
-        // aspect ratios ignoring insignificant differences in the LSBs of
-        // the floating point representation.
-        int iaspect = aspect * 9.;
-
-        /* Handle ITU PARs */
-        if (title->height == 480)
-        {
-            /* It's NTSC */
-            if (iaspect == 16)
-            {
-                /* It's widescreen */
-                pixel_aspect_width = 40;
-                pixel_aspect_height = 33;
-            }
-            else if (iaspect == 12)
-            {
-                /* It's 4:3 */
-                pixel_aspect_width = 10;
-                pixel_aspect_height = 11;
-            }
-        }
-        else if (title->height == 576)
-        {
-            /* It's PAL */
-            if(iaspect == 16)
-            {
-                /* It's widescreen */
-                pixel_aspect_width = 16;
-                pixel_aspect_height = 11;
-            }
-            else if (iaspect == 12)
-            {
-                /* It's 4:3 */
-                pixel_aspect_width = 12;
-                pixel_aspect_height = 11;
-            }
-        }
-    }
+    if( job->anamorphic.itu_par )
+        hb_get_itu_par( &source_pixel_aspect_width, &source_pixel_aspect_height, job );
 
     /* Figure out what width the source would display at. */
-    int source_display_width = cropped_width * (double)pixel_aspect_width /
-                               (double)pixel_aspect_height ;
+    double source_display_width = (double)cropped_width * source_pixel_aspect_width /
+                               source_pixel_aspect_height ;
 
     /*
        3 different ways of deciding output dimensions:
@@ -1017,12 +979,12 @@ void hb_set_anamorphic_size( hb_job_t * job,
     {
         case 1:
             /* Strict anamorphic */
-            *output_width  = MULTIPLE_MOD( cropped_width, 2 );
-            *output_height = MULTIPLE_MOD( cropped_height, 2 );
+            width  = MULTIPLE_MOD( cropped_width, 2 );
+            height = MULTIPLE_MOD( cropped_height, 2 );
             // adjust the source PAR for new width/height
             // new PAR = source PAR * ( old width / new_width ) * ( new_height / old_height )
-            pixel_aspect_width = title->pixel_aspect_width * cropped_width * (*output_height);            
-            pixel_aspect_height = title->pixel_aspect_height * (*output_width) * cropped_height;
+            pixel_aspect_width = source_pixel_aspect_width * cropped_width * height;
+            pixel_aspect_height = source_pixel_aspect_height * width * cropped_height;
         break;
 
         case 2:
@@ -1069,10 +1031,6 @@ void hb_set_anamorphic_size( hb_job_t * job,
             hb_limit_rational64( &par_w, &par_h, par_w, par_h, 65535);
             pixel_aspect_width = par_w;
             pixel_aspect_height = par_h;
-
-            /* Pass the results back to the caller */
-            *output_width = width;
-            *output_height = height;
         break;
             
         case 3:
@@ -1139,18 +1097,17 @@ void hb_set_anamorphic_size( hb_job_t * job,
                 }
                 else
                 {
-                    int output_display_width = width * (double)pixel_aspect_width /
-                        (double)pixel_aspect_height;
-                    pixel_aspect_width = output_display_width;
-                    pixel_aspect_height = width;
+                    /* Just use specified PAR */
+                    pixel_aspect_width = job->anamorphic.par_width;
+                    pixel_aspect_height = job->anamorphic.par_height;
                 }
             }
-            
-            /* Back to caller */
-            *output_width = width;
-            *output_height = height;
         break;
     }
+
+    /* Back to caller */
+    *output_width = width;
+    *output_height = height;
     
     /* While x264 is smart enough to reduce fractions on its own, libavcodec
        needs some help with the math, so lose superfluous factors.            */

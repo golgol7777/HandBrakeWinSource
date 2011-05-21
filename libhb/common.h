@@ -181,6 +181,7 @@ struct hb_job_s
 
     /* Picture settings:
          crop:                must be multiples of 2 (top/bottom/left/right)
+         pad:                 must be multiples of 2 (top/bottom/left/right)
          deinterlace:         0 or 1
          width:               must be a multiple of 2
          height:              must be a multiple of 2
@@ -193,12 +194,14 @@ struct hb_job_s
          maxWidth:            keep width below this
          maxHeight:           keep height below this */
     int             crop[4];
+    int             pad[4];
     int             deinterlace;
     hb_list_t     * filters;
     int             width;
     int             height;
     int             keep_ratio;
     int             grayscale;
+    int             auto_fitting;
 
     struct
     {
