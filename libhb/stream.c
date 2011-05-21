@@ -364,7 +364,15 @@ static int check_ps_sc(const uint8_t *buf)
     // a legal MPEG program stream must start with a Pack followed by a
     // some other start code. If we've already verified the pack, this skip
     // it and checks for a start code prefix.
-    int pos = 14 + ( buf[13] & 0x7 );   // skip over the PACK
+    int pos;
+
+    if( buf[4] & 0x40 ) // MPEG2
+        pos = 14 + ( buf[13] == 0xFF ? 0 : buf[13] & 0x7 );   // skip over the PACK
+    else if ( buf[4] & 0x20 ) // MPEG1
+        pos = 12;
+    else // not a Program Stream
+        return 0;
+
     return (buf[pos+0] == 0x00) && (buf[pos+1] == 0x00) && (buf[pos+2] == 0x01);
 }
 
@@ -429,7 +437,12 @@ static int hb_stream_check_for_ps(hb_stream_t *stream)
                 uint8_t *b = buf+offset;
 
                 // Skip the pack header
-                pes_offset = 14 + (b[13] & 0x7);
+                if ( b[4] & 0x40 ) //MPEG2
+                    pes_offset = 14 + ( buf[13] == 0xFF ? 0 : buf[13] & 0x7 );
+                else if ( b[4] & 0x20 ) //MPEG1
+                    pes_offset = 12;
+                else
+                    continue;
                 b +=  pes_offset;
                 // Get the next stream id
                 sid = b[3];

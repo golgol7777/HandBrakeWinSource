@@ -68,6 +68,7 @@ void hb_demux_ps( hb_buffer_t * buf, hb_list_t * list_es, hb_psdemux_t* state )
 {
     hb_buffer_t * buf_es;
     int           pos = 0;
+    int           mpeg1 = 0;
 
     while ( buf )
     {
@@ -88,21 +89,43 @@ void hb_demux_ps( hb_buffer_t * buf, hb_list_t * list_es, hb_psdemux_t* state )
         }
         pos += 4;                    /* pack_start_code */
 
+        if( d[pos] & 0x20 )
+            mpeg1 = 1;
+
         if ( state )
         {
+            int64_t scr;
+
             /* extract the system clock reference (scr) */
-            int64_t scr = ((uint64_t)(d[pos] & 0x38) << 27) |
-                          ((uint64_t)(d[pos] & 0x03) << 28) |
-                          ((uint64_t)(d[pos+1]) << 20) |
-                          ((uint64_t)(d[pos+2] >> 3) << 15) |
-                          ((uint64_t)(d[pos+2] & 3) << 13) |
-                          ((uint64_t)(d[pos+3]) << 5) |
-                          (d[pos+4] >> 3);
-            check_mpeg_scr( state, scr, 300 );
+            if( mpeg1 )
+            {
+                scr = ((uint64_t)(d[pos] & 0x0E) << 29) |
+                      ((uint64_t)(d[pos+1]) << 22) |
+                      ((uint64_t)(d[pos+2] & 0xFE) << 15) |
+                      ((uint64_t)(d[pos+3]) << 7) |
+                      (d[pos+4] >> 1);
+                //check_mpeg_scr( state, scr, 1000 );
+            }
+            else
+            {
+                scr = ((uint64_t)(d[pos] & 0x38) << 27) |
+                      ((uint64_t)(d[pos] & 0x03) << 28) |
+                      ((uint64_t)(d[pos+1]) << 20) |
+                      ((uint64_t)(d[pos+2] >> 3) << 15) |
+                      ((uint64_t)(d[pos+2] & 3) << 13) |
+                      ((uint64_t)(d[pos+3]) << 5) |
+                      (d[pos+4] >> 3);
+                check_mpeg_scr( state, scr, 300 );
+            }
         }
 
-        pos += 9;                    /* pack_header */
-        pos += 1 + ( d[pos] & 0x7 ); /* stuffing bytes */
+        if( mpeg1 )
+            pos += 8;                    /* pack_header */
+        else
+        {
+            pos += 9;                    /* pack_header */
+            pos += 1 + ( d[pos] & 0x7 ); /* stuffing bytes */
+        }
 
         /* system_header */
         if( d[pos] == 0 && d[pos+1] == 0 &&
@@ -160,27 +183,46 @@ void hb_demux_ps( hb_buffer_t * buf, hb_list_t * list_es, hb_psdemux_t* state )
                 continue;
             }
 
-            has_pts            = d[pos+1] >> 6;
-            pos               += 2;               /* Required headers */
+            if( mpeg1 )
+            {
+                while( d[pos] == 0xFF ) /* stuffing bytes */
+                    pos++;
 
-            pes_header_d_length  = d[pos];
-            pos                    += 1;
+                if( d[pos] & 0x40 )
+                    pos               += 2;               /* STD buffer size */
+                has_pts            = d[pos] >> 4;
+                if( has_pts && has_pts & 1 )
+                    pes_header_d_length = 10;
+                else if( has_pts )
+                    pes_header_d_length = 5;
+                else
+                    pes_header_d_length = 1;
+            }
+            else
+            {
+                has_pts            = d[pos+1] >> 6;
+                pos               += 2;               /* Required headers */
+
+                pes_header_d_length  = d[pos];
+                pos                    += 1;
+            }
+
             pes_header_end          = pos + pes_header_d_length;
 
             if( has_pts )
             {
-                pts = ( (uint64_t)(d[pos] & 0xe ) << 29 ) +
-                      ( d[pos+1] << 22 ) +
-                      ( ( d[pos+2] >> 1 ) << 15 ) +
-                      ( d[pos+3] << 7 ) +
-                      ( d[pos+4] >> 1 );
+                pts = (uint64_t)(d[pos] & 0xE ) << 29 |
+                      (uint64_t)d[pos+1] << 22 |
+                      (uint64_t)(d[pos+2] >> 1 ) << 15 |
+                      (uint64_t)d[pos+3] << 7 |
+                      (uint64_t)d[pos+4] >> 1;
                 if ( has_pts & 1 )
                 {
-                    dts = ( (uint64_t)(d[pos+5] & 0xe ) << 29 ) +
-                          ( d[pos+6] << 22 ) +
-                          ( ( d[pos+7] >> 1 ) << 15 ) +
-                          ( d[pos+8] << 7 ) +
-                          ( d[pos+9] >> 1 );
+                    dts = (uint64_t)(d[pos+5] & 0xE ) << 29 |
+                          (uint64_t)d[pos+6] << 22 |
+                          (uint64_t)(d[pos+7] >> 1 ) << 15 |
+                          (uint64_t)d[pos+8] << 7 |
+                          (uint64_t)d[pos+9] >> 1;
                 }
                 else
                 {
