@@ -265,6 +265,16 @@ namespace Handbrake.Functions
                 query += " --crop " + cropTop + ":" + cropBottom + ":" + cropLeft + ":" + cropRight;
             }
 
+            if (mainWindow.PictureSettings.check_enablePad.Checked)
+            {
+                string padTop = mainWindow.PictureSettings.pad_top.Text;
+                string padBottom = mainWindow.PictureSettings.pad_bottom.Text;
+                string padLeft = mainWindow.PictureSettings.pad_left.Text;
+                string padRight = mainWindow.PictureSettings.pad_right.Text;
+
+                query += " --pad " + padTop + ":" + padBottom + ":" + padLeft + ":" + padRight;
+            }
+
             switch (mainWindow.PictureSettings.drp_anamorphic.SelectedIndex)
             {
                 case 0:
@@ -296,6 +306,22 @@ namespace Handbrake.Functions
                             mainWindow.PictureSettings.updownParHeight.Text != string.Empty)
                             query += " --pixel-aspect " + mainWindow.PictureSettings.updownParWidth.Text + ":" +
                                      mainWindow.PictureSettings.updownParHeight.Text + " ";
+                    break;
+            }
+
+            if (mainWindow.PictureSettings.check_UseITUPar.Checked)
+                query += " --itu-par";
+
+            switch (mainWindow.PictureSettings.drp_colormatrix.SelectedIndex)
+            {
+                case 1:
+                    query += " -M 709";
+                    break;
+                case 2:
+                    query += " -M 601";
+                    break;
+                default:
+                    query += string.Empty;
                     break;
             }
 

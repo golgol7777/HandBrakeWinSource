@@ -25,6 +25,7 @@ namespace HandBrake.ApplicationServices.Model
         public EncodeTask()
         {
             this.Cropping = new Cropping();
+            this.Padding = new Padding();
         }
 
         #region Source
@@ -124,6 +125,16 @@ namespace HandBrake.ApplicationServices.Model
         public Cropping Cropping { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating Padding is enabled.
+        /// </summary>
+        public bool PaddingEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets Padding.
+        /// </summary>
+        public Padding Padding { get; set; }
+
+        /// <summary>
         /// Gets or sets Anamorphic.
         /// </summary>
         public Anamorphic Anamorphic { get; set; }
@@ -152,6 +163,16 @@ namespace HandBrake.ApplicationServices.Model
         /// Gets or sets Modulus.
         /// </summary>
         public int? Modulus { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether ITU par is used or not.
+        /// </summary>
+        public bool UseITUPar { get; set; }
+
+        /// <summary>
+        /// Gets or sets ColorMatrix.
+        /// </summary>
+        public int? ColorMatrix { get; set; }
         #endregion
 
         #region Filters

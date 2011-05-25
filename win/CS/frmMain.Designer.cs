@@ -959,7 +959,7 @@ namespace Handbrake
             this.PictureSettings.Location = new System.Drawing.Point(0, 0);
             this.PictureSettings.Name = "PictureSettings";
             this.PictureSettings.PresetMaximumResolution = new System.Drawing.Size(0, 0);
-            this.PictureSettings.Size = new System.Drawing.Size(666, 279);
+            this.PictureSettings.Size = new System.Drawing.Size(720, 305);
             this.PictureSettings.TabIndex = 0;
             // 
             // Check_ChapterMarkers

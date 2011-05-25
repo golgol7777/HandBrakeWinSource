@@ -191,6 +191,15 @@ namespace HandBrake.ApplicationServices.Utilities
             }
             query += " --modulus " + task.Modulus;
 
+            if (task.PaddingEnabled)
+                query += string.Format(" --pad {0}:{1}:{2}:{3}", task.Padding.Top, task.Padding.Bottom, task.Padding.Left, task.Padding.Right);
+
+            if (task.UseITUPar)
+                query += " --itu-par";
+
+            if (task.ColorMatrix.HasValue)
+                query += string.Format(" -M {0}", task.ColorMatrix.Value);
+
             return query;
         }
 

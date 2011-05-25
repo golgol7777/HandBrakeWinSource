@@ -62,6 +62,7 @@ namespace HandBrake.ApplicationServices.Utilities
             Match maxWidth = Regex.Match(input, @"-X ([0-9]*)");
             Match maxHeight = Regex.Match(input, @"-Y ([0-9]*)");
             Match crop = Regex.Match(input, @"--crop ([0-9]*):([0-9]*):([0-9]*):([0-9]*)");
+            Match padding = Regex.Match(input, @"--pad ([0-9]*):([0-9]*):([0-9]*):([0-9]*)");
 
             Match looseAnamorphic = Regex.Match(input, @"--loose-anamorphic");
             Match strictAnamorphic = Regex.Match(input, @"--strict-anamorphic");
@@ -71,6 +72,8 @@ namespace HandBrake.ApplicationServices.Utilities
             Match displayWidth = Regex.Match(input, @"--display-width ([0-9]*)");
             Match pixelAspect = Regex.Match(input, @"--pixel-aspect ([0-9]*):([0-9]*)");
             Match modulus = Regex.Match(input, @"--modulus ([0-9]*)");
+            Match colormatrix = Regex.Match(input, @"-M ([0-9]*)");
+            Match itupar = Regex.Match(input, @" --itu-par ");
 
             // Picture Settings - Filters
             Match decomb = Regex.Match(input, @" --decomb");
@@ -208,6 +211,33 @@ namespace HandBrake.ApplicationServices.Utilities
 
                 if (modulus.Success)
                     parsed.Modulus = int.Parse(modulus.Groups[0].Value.Replace("--modulus ", string.Empty));
+
+                parsed.PaddingEnabled = padding.Success;
+                if (padding.Success)
+                {
+                    try
+                    {
+                        string values = padding.ToString().Replace("--pad ", string.Empty).Trim();
+                        string[] actPaddingValues = values.Split(':');
+                        parsed.Padding = new Padding(
+                            int.Parse(actPaddingValues[0]),
+                            int.Parse(actPaddingValues[1]),
+                            int.Parse(actPaddingValues[2]),
+                            int.Parse(actPaddingValues[3]));
+                    }
+                    catch (Exception)
+                    {
+                        // No need to do anything.
+                    }
+                }
+
+                parsed.ColorMatrix = null;
+                if (colormatrix.Success)
+                    parsed.ColorMatrix = int.Parse(colormatrix.Groups[0].Value.Replace("-M ", string.Empty));
+
+                parsed.UseITUPar = false;
+                if (itupar.Success)
+                    parsed.UseITUPar = true;
 
                 #endregion
 
