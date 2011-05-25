@@ -83,6 +83,7 @@ namespace HandBrake.ApplicationServices.Utilities
             Match deblock = Regex.Match(input, @"--deblock=([0-9:]*)");
             Match detelecine = Regex.Match(input, @"--detelecine");
             Match detelecineValue = Regex.Match(input, @" --detelecine=\""([a-zA-Z0-9.:]*)\""");
+            Match colorspace = Regex.Match(input, @" --colorspace ([0-9:]*)");
 
             // Video Settings Tab
             Match videoEncoder = Regex.Match(input, @"-e ([a-zA-Z0-9]*)");
@@ -314,6 +315,20 @@ namespace HandBrake.ApplicationServices.Utilities
                     {
                         parsed.CustomDetelecine = detelecineValue.ToString().Replace("--detelecine=", string.Empty).Replace("\"", string.Empty);
                         parsed.Detelecine = Detelecine.Custom;
+                    }
+                }
+
+                parsed.ColorSpaceConverter = ColorSpaceConverter.Off;
+                if (colorspace.Success)
+                {
+                    switch (colorspace.ToString().Replace("--colorspace ", string.Empty).Trim())
+                    {
+                        case "709:601":
+                            parsed.ColorSpaceConverter = ColorSpaceConverter.Convert709to601;
+                            break;
+                        case "601:709":
+                            parsed.ColorSpaceConverter = ColorSpaceConverter.Convert601to709;
+                            break;
                     }
                 }
 

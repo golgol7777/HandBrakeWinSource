@@ -284,6 +284,18 @@ namespace HandBrake.ApplicationServices.Utilities
             if (task.Grayscale)
                 query += " -g ";
 
+            switch (task.ColorSpaceConverter)
+            {
+                case ColorSpaceConverter.Convert709to601:
+                    query += " --colorspace 709:601";
+                    break;
+                case ColorSpaceConverter.Convert601to709:
+                    query += " --colorspace 601:709";
+                    break;
+                default:
+                    break;
+            }
+
             return query;
         }
 

@@ -226,6 +226,11 @@ namespace HandBrake.ApplicationServices.Model
         /// Gets or sets a value indicating whether Grayscale.
         /// </summary>
         public bool Grayscale { get; set; }
+
+        /// <summary>
+        /// Gets or sets ColorSpaceConverter.
+        /// </summary>
+        public ColorSpaceConverter ColorSpaceConverter { get; set; }
         #endregion
 
         #region Video

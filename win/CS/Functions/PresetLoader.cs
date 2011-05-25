@@ -235,6 +235,7 @@ namespace Handbrake.Functions
             mainWindow.Filters.SetDeTelecine(presetQuery.Detelecine, presetQuery.CustomDetelecine);
             mainWindow.Filters.SetDeBlock(presetQuery.Deblock);
             mainWindow.Filters.SetGrayScale(presetQuery.Grayscale);
+            mainWindow.Filters.SetColorSpaceConverter(presetQuery.ColorSpaceConverter);
 
             #endregion
 

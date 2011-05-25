@@ -45,6 +45,9 @@
             this.label8 = new System.Windows.Forms.Label();
             this.lbl_deblockVal = new System.Windows.Forms.Label();
             this.label68 = new System.Windows.Forms.Label();
+            this.btn_colorspace709to601 = new System.Windows.Forms.RadioButton();
+            this.btn_colorspace601to709 = new System.Windows.Forms.RadioButton();
+            this.check_colorspace = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.slider_deblock)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -56,7 +59,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.text_customDT.Location = new System.Drawing.Point(251, 3);
             this.text_customDT.Name = "text_customDT";
-            this.text_customDT.Size = new System.Drawing.Size(115, 21);
+            this.text_customDT.Size = new System.Drawing.Size(117, 21);
             this.text_customDT.TabIndex = 47;
             this.text_customDT.Visible = false;
             // 
@@ -94,7 +97,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.text_customDC.Location = new System.Drawing.Point(251, 30);
             this.text_customDC.Name = "text_customDC";
-            this.text_customDC.Size = new System.Drawing.Size(115, 21);
+            this.text_customDC.Size = new System.Drawing.Size(117, 21);
             this.text_customDC.TabIndex = 50;
             this.text_customDC.Visible = false;
             // 
@@ -132,7 +135,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.text_customDI.Location = new System.Drawing.Point(251, 57);
             this.text_customDI.Name = "text_customDI";
-            this.text_customDI.Size = new System.Drawing.Size(115, 21);
+            this.text_customDI.Size = new System.Drawing.Size(117, 21);
             this.text_customDI.TabIndex = 53;
             this.text_customDI.Visible = false;
             // 
@@ -172,7 +175,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.text_customDN.Location = new System.Drawing.Point(251, 84);
             this.text_customDN.Name = "text_customDN";
-            this.text_customDN.Size = new System.Drawing.Size(115, 21);
+            this.text_customDN.Size = new System.Drawing.Size(117, 21);
             this.text_customDN.TabIndex = 56;
             this.text_customDN.Visible = false;
             // 
@@ -215,7 +218,7 @@
             this.slider_deblock.Maximum = 15;
             this.slider_deblock.Minimum = 4;
             this.slider_deblock.Name = "slider_deblock";
-            this.slider_deblock.Size = new System.Drawing.Size(174, 45);
+            this.slider_deblock.Size = new System.Drawing.Size(174, 42);
             this.slider_deblock.TabIndex = 58;
             this.slider_deblock.Value = 4;
             this.slider_deblock.Scroll += new System.EventHandler(this.SliderDeblockScroll);
@@ -224,7 +227,7 @@
             // 
             this.check_grayscale.AutoSize = true;
             this.check_grayscale.BackColor = System.Drawing.Color.Transparent;
-            this.check_grayscale.Location = new System.Drawing.Point(71, 162);
+            this.check_grayscale.Location = new System.Drawing.Point(71, 159);
             this.check_grayscale.Name = "check_grayscale";
             this.check_grayscale.Size = new System.Drawing.Size(119, 17);
             this.check_grayscale.TabIndex = 57;
@@ -287,17 +290,61 @@
             this.tableLayoutPanel1.Controls.Add(this.drop_denoise, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.drop_decomb, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.drop_deinterlace, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.btn_colorspace709to601, 2, 6);
+            this.tableLayoutPanel1.Controls.Add(this.btn_colorspace601to709, 2, 7);
+            this.tableLayoutPanel1.Controls.Add(this.check_colorspace, 1, 6);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(19, 29);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 6;
+            this.tableLayoutPanel1.RowCount = 8;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(369, 182);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(371, 225);
             this.tableLayoutPanel1.TabIndex = 62;
+            // 
+            // btn_colorspace709to601
+            // 
+            this.btn_colorspace709to601.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_colorspace709to601.AutoSize = true;
+            this.btn_colorspace709to601.Checked = true;
+            this.btn_colorspace709to601.Location = new System.Drawing.Point(251, 182);
+            this.btn_colorspace709to601.Name = "btn_colorspace709to601";
+            this.btn_colorspace709to601.Size = new System.Drawing.Size(117, 17);
+            this.btn_colorspace709to601.TabIndex = 64;
+            this.btn_colorspace709to601.TabStop = true;
+            this.btn_colorspace709to601.Text = "BT.709 -> BT.601";
+            this.btn_colorspace709to601.UseVisualStyleBackColor = true;
+            this.btn_colorspace709to601.Visible = false;
+            // 
+            // btn_colorspace601to709
+            // 
+            this.btn_colorspace601to709.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_colorspace601to709.AutoSize = true;
+            this.btn_colorspace601to709.Location = new System.Drawing.Point(251, 205);
+            this.btn_colorspace601to709.Name = "btn_colorspace601to709";
+            this.btn_colorspace601to709.Size = new System.Drawing.Size(117, 17);
+            this.btn_colorspace601to709.TabIndex = 63;
+            this.btn_colorspace601to709.Text = "BT.601 -> BT.709";
+            this.btn_colorspace601to709.UseVisualStyleBackColor = true;
+            this.btn_colorspace601to709.Visible = false;
+            // 
+            // check_colorspace
+            // 
+            this.check_colorspace.AutoSize = true;
+            this.check_colorspace.Location = new System.Drawing.Point(71, 182);
+            this.check_colorspace.Name = "check_colorspace";
+            this.check_colorspace.Size = new System.Drawing.Size(132, 17);
+            this.check_colorspace.TabIndex = 65;
+            this.check_colorspace.Text = "Colormarix conversion";
+            this.check_colorspace.UseVisualStyleBackColor = true;
+            this.check_colorspace.CheckedChanged += new System.EventHandler(this.CheckColorspaceCheckedChanged);
             // 
             // Filters
             // 
@@ -336,5 +383,8 @@
         internal System.Windows.Forms.Label lbl_deblockVal;
         internal System.Windows.Forms.Label label68;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.RadioButton btn_colorspace709to601;
+        private System.Windows.Forms.RadioButton btn_colorspace601to709;
+        private System.Windows.Forms.CheckBox check_colorspace;
     }
 }
