@@ -170,8 +170,11 @@ namespace HandBrake.ApplicationServices.Utilities
                 if (maxHeight.Success)
                     parsed.MaxHeight = int.Parse(maxHeight.Groups[0].Value.Replace("-Y ", string.Empty));
 
-                if (crop.Success)
+                if (!crop.Success)
+                    parsed.IsCustomCropping = false;
+                else
                 {
+                    parsed.IsCustomCropping = true;
                     try
                     {
                         string values = crop.ToString().Replace("--crop ", string.Empty);

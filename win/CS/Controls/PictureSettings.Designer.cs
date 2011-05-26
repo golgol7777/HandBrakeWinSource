@@ -79,6 +79,7 @@ namespace Handbrake.Controls
             this.pad_top = new System.Windows.Forms.NumericUpDown();
             this.pad_bottom = new System.Windows.Forms.NumericUpDown();
             this.lbl_padBottom = new System.Windows.Forms.Label();
+            this.check_disableCrop = new System.Windows.Forms.RadioButton();
             this.tbl_cropping.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.crop_left)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.crop_right)).BeginInit();
@@ -118,6 +119,7 @@ namespace Handbrake.Controls
             this.tbl_cropping.Controls.Add(this.lbl_cropTop, 3, 0);
             this.tbl_cropping.Controls.Add(this.crop_bottom, 3, 3);
             this.tbl_cropping.Controls.Add(this.check_customCrop, 0, 1);
+            this.tbl_cropping.Controls.Add(this.check_disableCrop, 0, 2);
             this.tbl_cropping.Location = new System.Drawing.Point(338, 35);
             this.tbl_cropping.Name = "tbl_cropping";
             this.tbl_cropping.RowCount = 5;
@@ -274,9 +276,10 @@ namespace Handbrake.Controls
             // 
             // check_customCrop
             // 
+            this.check_customCrop.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.check_customCrop.AutoSize = true;
             this.check_customCrop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.check_customCrop.Location = new System.Drawing.Point(0, 26);
+            this.check_customCrop.Location = new System.Drawing.Point(0, 28);
             this.check_customCrop.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
             this.check_customCrop.Name = "check_customCrop";
             this.check_customCrop.Size = new System.Drawing.Size(61, 17);
@@ -878,6 +881,19 @@ namespace Handbrake.Controls
             this.lbl_padBottom.TabIndex = 104;
             this.lbl_padBottom.Text = "Bottom";
             // 
+            // check_disableCrop
+            // 
+            this.check_disableCrop.AutoSize = true;
+            this.check_disableCrop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.check_disableCrop.Location = new System.Drawing.Point(0, 53);
+            this.check_disableCrop.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+            this.check_disableCrop.Name = "check_disableCrop";
+            this.check_disableCrop.Size = new System.Drawing.Size(59, 17);
+            this.check_disableCrop.TabIndex = 107;
+            this.check_disableCrop.Text = "Disable";
+            this.check_disableCrop.UseVisualStyleBackColor = true;
+            this.check_disableCrop.CheckedChanged += new System.EventHandler(this.CheckAutoCropCheckedChanged);
+            // 
             // PictureSettings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -900,10 +916,12 @@ namespace Handbrake.Controls
             ((System.ComponentModel.ISupportInitialize)(this.crop_right)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.crop_top)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.crop_bottom)).EndInit();
-            this.tbl_anamorphic.ResumeLayout(false);
-            this.tbl_anamorphic.PerformLayout();
+            this.tbl_size.ResumeLayout(false);
+            this.tbl_size.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.text_width)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.text_height)).EndInit();
+            this.tbl_anamorphic.ResumeLayout(false);
+            this.tbl_anamorphic.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updownParHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.updownParWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.updownDisplayWidth)).EndInit();
@@ -971,6 +989,7 @@ namespace Handbrake.Controls
         private System.Windows.Forms.Label lbl_useITUPar;
         internal System.Windows.Forms.CheckBox check_UseITUPar;
         internal System.Windows.Forms.TableLayoutPanel tbl_padding;
+        internal System.Windows.Forms.RadioButton check_disableCrop;
 
 
 

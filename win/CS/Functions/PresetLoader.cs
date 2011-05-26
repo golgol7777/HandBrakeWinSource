@@ -96,7 +96,10 @@ namespace Handbrake.Functions
             mainWindow.PictureSettings.check_autoCrop.Checked = true;
             if (presetQuery.IsCustomCropping)
             {
-                mainWindow.PictureSettings.check_customCrop.Checked = true;
+                if( presetQuery.Cropping.Top != 0 || presetQuery.Cropping.Bottom != 0 || presetQuery.Cropping.Left != 0 || presetQuery.Cropping.Right != 0 )
+                    mainWindow.PictureSettings.check_customCrop.Checked = true;
+                else
+                    mainWindow.PictureSettings.check_disableCrop.Checked = true;
                 mainWindow.PictureSettings.crop_top.Value = presetQuery.Cropping.Top;
                 mainWindow.PictureSettings.crop_bottom.Value = presetQuery.Cropping.Bottom;
                 mainWindow.PictureSettings.crop_left.Value = presetQuery.Cropping.Left;

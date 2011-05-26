@@ -264,6 +264,8 @@ namespace Handbrake.Functions
 
                 query += " --crop " + cropTop + ":" + cropBottom + ":" + cropLeft + ":" + cropRight;
             }
+            else if (mainWindow.PictureSettings.check_disableCrop.Checked)
+                query += " --crop 0:0:0:0";
 
             if (mainWindow.PictureSettings.check_enablePad.Checked)
             {

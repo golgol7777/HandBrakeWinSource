@@ -461,10 +461,10 @@ namespace Handbrake.Controls
 
             if (Source != null)
             {
-                crop_top.Value = Source.AutoCropDimensions.Top;
-                crop_bottom.Value = Source.AutoCropDimensions.Bottom;
-                crop_left.Value = Source.AutoCropDimensions.Left;
-                crop_right.Value = Source.AutoCropDimensions.Right;
+                crop_top.Value = !check_disableCrop.Checked ? Source.AutoCropDimensions.Top : 0;
+                crop_bottom.Value = !check_disableCrop.Checked ? Source.AutoCropDimensions.Bottom : 0;
+                crop_left.Value = !check_disableCrop.Checked ? Source.AutoCropDimensions.Left : 0;
+                crop_right.Value = !check_disableCrop.Checked ? Source.AutoCropDimensions.Right : 0;
             }
         }
 
