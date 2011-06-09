@@ -30,6 +30,14 @@
 #include <IOKit/storage/IODVDMedia.h>
 #endif
 
+#if defined( __APPLE_CC__ )
+#define DEFAULT_AAC_ENC "ca_aac"
+#elif defined( __MINGW32__ ) && defined ( USE_QT_AAC )
+#define DEFAULT_AAC_ENC "qt_aac"
+#else
+#define DEFAULT_AAC_ENC "faac"
+#endif
+
 /* Options */
 #if defined( __APPLE_CC__ )
 #define EXTRA_VLC_DYLD_PATH "/Applications/VLC.app/Contents/MacOS/lib"
@@ -78,8 +86,10 @@ static char * abitrates   = NULL;
 static char * acodec_fallback = NULL;
 static char * acodecs     = NULL;
 static char ** anames      = NULL;
-#ifdef __APPLE_CC__
+#if defined( __APPLE_CC__ )
 static int    default_acodec = HB_ACODEC_CA_AAC;
+#elif defined( __MINGW32__ ) && defined ( USE_QT_AAC )
+static int    default_acodec = HB_ACODEC_QT_AAC;
 #else
 static int    default_acodec = HB_ACODEC_FAAC;
 #endif
@@ -647,7 +657,7 @@ static int HandleEvents( hb_handle_t * h )
                     }
                     if( !acodecs )
                     {
-                        acodecs = strdup("faac,copy:ac3");
+                        acodecs = strdup( DEFAULT_AAC_ENC ",copy:ac3");
                     }
                     if( !abitrates )
                     {
@@ -693,7 +703,7 @@ static int HandleEvents( hb_handle_t * h )
                     }
                     if( !acodecs )
                     {
-                        acodecs = strdup("faac");
+                        acodecs = strdup( DEFAULT_AAC_ENC );
                     }
                     if( !abitrates )
                     {
@@ -734,7 +744,7 @@ static int HandleEvents( hb_handle_t * h )
                     }
                     if( !acodecs )
                     {
-                        acodecs = strdup("faac");
+                        acodecs = strdup( DEFAULT_AAC_ENC );
                     }
                     if( !abitrates )
                     {
@@ -778,7 +788,7 @@ static int HandleEvents( hb_handle_t * h )
                     }
                     if( !acodecs )
                     {
-                        acodecs = strdup("faac");
+                        acodecs = strdup( DEFAULT_AAC_ENC );
                     }
                     if( !abitrates )
                     {
@@ -822,7 +832,7 @@ static int HandleEvents( hb_handle_t * h )
                     }
                     if( !acodecs )
                     {
-                        acodecs = strdup("faac");
+                        acodecs = strdup( DEFAULT_AAC_ENC );
                     }
                     if( !abitrates )
                     {
@@ -864,7 +874,7 @@ static int HandleEvents( hb_handle_t * h )
                     }
                     if( !acodecs )
                     {
-                        acodecs = strdup("faac,copy:ac3");
+                        acodecs = strdup( DEFAULT_AAC_ENC ",copy:ac3");
                     }
                     if( !abitrates )
                     {
@@ -912,7 +922,7 @@ static int HandleEvents( hb_handle_t * h )
                     }
                     if( !acodecs )
                     {
-                        acodecs = strdup("faac,copy:ac3");
+                        acodecs = strdup( DEFAULT_AAC_ENC ",copy:ac3");
                     }
                     if( !abitrates )
                     {
@@ -955,7 +965,7 @@ static int HandleEvents( hb_handle_t * h )
                     }
                     if( !acodecs )
                     {
-                        acodecs = strdup("faac");
+                        acodecs = strdup( DEFAULT_AAC_ENC );
                     }
                     if( !abitrates )
                     {
@@ -997,7 +1007,7 @@ static int HandleEvents( hb_handle_t * h )
                     }
                     if( !acodecs )
                     {
-                        acodecs = strdup("faac");
+                        acodecs = strdup( DEFAULT_AAC_ENC );
                     }
                     if( !abitrates )
                     {
@@ -1041,7 +1051,7 @@ static int HandleEvents( hb_handle_t * h )
                     }
                     if( !acodecs )
                     {
-                        acodecs = strdup("faac");
+                        acodecs = strdup( DEFAULT_AAC_ENC );
                     }
                     if( !abitrates )
                     {
@@ -1086,7 +1096,7 @@ static int HandleEvents( hb_handle_t * h )
                     }
                     if( !acodecs )
                     {
-                        acodecs = strdup("faac,copy:ac3");
+                        acodecs = strdup( DEFAULT_AAC_ENC ",copy:ac3");
                     }
                     if( !abitrates )
                     {
@@ -1131,7 +1141,7 @@ static int HandleEvents( hb_handle_t * h )
                     }
                     if( !acodecs )
                     {
-                        acodecs = strdup("faac");
+                        acodecs = strdup( DEFAULT_AAC_ENC );
                     }
                     if( !abitrates )
                     {
@@ -1167,7 +1177,7 @@ static int HandleEvents( hb_handle_t * h )
                     }
                     if( !acodecs )
                     {
-                        acodecs = strdup("faac");
+                        acodecs = strdup( DEFAULT_AAC_ENC );
                     }
                     if( !abitrates )
                     {
@@ -2586,7 +2596,7 @@ static void ShowHelp()
     "                            (\"none\" for no audio, \"1,2,3\" for multiple\n"
     "                             tracks, default: first one)\n" );
 
-#ifdef __APPLE_CC__
+#if defined( __APPLE_CC__ )
     fprintf( out,
     "    -E, --aencoder <string> Audio encoder(s)\n"
     "                               ca_aac\n"
@@ -2606,6 +2616,26 @@ static void ShowHelp()
     "                            supported passthrough audio type.\n"
     "                            Separated by commas for more than one audio track.\n"
     "                            (default: ca_aac)\n" );
+#elif defined( __MINGW32__ ) && defined ( USE_QT_AAC )
+    fprintf( out,
+    "    -E, --aencoder <string> Audio encoder(s)\n"
+    "                               qt_aac\n"
+    "                               qt_haac\n"
+    "                               faac\n"
+    "                               lame\n"
+    "                               vorbis\n"
+    "                               ac3\n"
+    "                               copy\n"
+    "                               copy:aac\n"
+    "                               copy:ac3\n"
+    "                               copy:dts\n"
+    "                               copy:dtshd\n"
+    "                               copy:mp3\n"
+    "                            copy* will passthrough the corresponding\n"
+    "                            audio unmodified to the muxer if it is a\n"
+    "                            supported passthrough audio type.\n"
+    "                            Separated by commas for more than one audio track.\n"
+    "                            (default: qt_aac)\n" );
 #else
     fprintf( out,
     "    -E, --aencoder <string> Audio encoder(s):\n"
@@ -2794,39 +2824,39 @@ static void ShowPresets()
 
     printf("\n< Devices\n");
 
-    printf("\n   + Universal:  -e x264  -q 20.0 -a 1,1 -E faac,copy:ac3 -B 160,160 -6 dpl2,auto -R Auto,Auto -D 0.0,0.0 -f mp4 -X 720 --loose-anamorphic -m -x cabac=0:ref=2:me=umh:bframes=0:weightp=0:8x8dct=0:trellis=0:subme=6\n");
+    printf("\n   + Universal:  -e x264  -q 20.0 -a 1,1 -E " DEFAULT_AAC_ENC ",copy:ac3 -B 160,160 -6 dpl2,auto -R Auto,Auto -D 0.0,0.0 -f mp4 -X 720 --loose-anamorphic -m -x cabac=0:ref=2:me=umh:bframes=0:weightp=0:8x8dct=0:trellis=0:subme=6\n");
 
-    printf("\n   + iPod:  -e x264  -b 700 -a 1 -E faac -B 160 -6 dpl2 -R Auto -D 0.0 -f mp4 -I -X 320 -m -x level=30:bframes=0:weightp=0:cabac=0:ref=1:vbv-maxrate=768:vbv-bufsize=2000:analyse=all:me=umh:no-fast-pskip=1:subme=6:8x8dct=0:trellis=0\n");
+    printf("\n   + iPod:  -e x264  -b 700 -a 1 -E " DEFAULT_AAC_ENC " -B 160 -6 dpl2 -R Auto -D 0.0 -f mp4 -I -X 320 -m -x level=30:bframes=0:weightp=0:cabac=0:ref=1:vbv-maxrate=768:vbv-bufsize=2000:analyse=all:me=umh:no-fast-pskip=1:subme=6:8x8dct=0:trellis=0\n");
 
-    printf("\n   + iPhone & iPod Touch:  -e x264  -q 20.0 -a 1 -E faac -B 128 -6 dpl2 -R Auto -D 0.0 -f mp4 -X 480 -m -x cabac=0:ref=2:me=umh:bframes=0:weightp=0:subme=6:8x8dct=0:trellis=0\n");
+    printf("\n   + iPhone & iPod Touch:  -e x264  -q 20.0 -a 1 -E " DEFAULT_AAC_ENC " -B 128 -6 dpl2 -R Auto -D 0.0 -f mp4 -X 480 -m -x cabac=0:ref=2:me=umh:bframes=0:weightp=0:subme=6:8x8dct=0:trellis=0\n");
 
-    printf("\n   + iPhone 4:  -e x264  -q 20.0 -r 29.97 --pfr  -a 1 -E faac -B 160 -6 dpl2 -R Auto -D 0.0 -f mp4 -4 -X 960 --loose-anamorphic -m\n");
+    printf("\n   + iPhone 4:  -e x264  -q 20.0 -r 29.97 --pfr  -a 1 -E " DEFAULT_AAC_ENC " -B 160 -6 dpl2 -R Auto -D 0.0 -f mp4 -4 -X 960 --loose-anamorphic -m\n");
 
-    printf("\n   + iPad:  -e x264  -q 20.0 -r 29.97 --pfr  -a 1 -E faac -B 160 -6 dpl2 -R Auto -D 0.0 -f mp4 -4 -X 1024 --loose-anamorphic -m\n");
+    printf("\n   + iPad:  -e x264  -q 20.0 -r 29.97 --pfr  -a 1 -E " DEFAULT_AAC_ENC " -B 160 -6 dpl2 -R Auto -D 0.0 -f mp4 -4 -X 1024 --loose-anamorphic -m\n");
 
-    printf("\n   + AppleTV:  -e x264  -q 20.0 -a 1,1 -E faac,copy:ac3 -B 160,160 -6 dpl2,auto -R Auto,Auto -D 0.0,0.0 -f mp4 -4 -X 960 --loose-anamorphic -m -x cabac=0:ref=2:me=umh:b-pyramid=none:b-adapt=2:weightb=0:trellis=0:weightp=0:vbv-maxrate=9500:vbv-bufsize=9500\n");
+    printf("\n   + AppleTV:  -e x264  -q 20.0 -a 1,1 -E " DEFAULT_AAC_ENC ",copy:ac3 -B 160,160 -6 dpl2,auto -R Auto,Auto -D 0.0,0.0 -f mp4 -4 -X 960 --loose-anamorphic -m -x cabac=0:ref=2:me=umh:b-pyramid=none:b-adapt=2:weightb=0:trellis=0:weightp=0:vbv-maxrate=9500:vbv-bufsize=9500\n");
 
-    printf("\n   + AppleTV 2:  -e x264  -q 20.0 -r 29.97 --pfr  -a 1,1 -E faac,copy:ac3 -B 160,160 -6 dpl2,auto -R Auto,Auto -D 0.0,0.0 -f mp4 -4 -X 1280 --loose-anamorphic -m\n");
+    printf("\n   + AppleTV 2:  -e x264  -q 20.0 -r 29.97 --pfr  -a 1,1 -E " DEFAULT_AAC_ENC ",copy:ac3 -B 160,160 -6 dpl2,auto -R Auto,Auto -D 0.0,0.0 -f mp4 -4 -X 1280 --loose-anamorphic -m\n");
 
-    printf("\n   + Android Mid:  -e x264  -q 22.0 -r 29.97 --pfr  -a 1 -E faac -B 128 -6 dpl2 -R Auto -D 0.0 -f mp4 -X 480 -x cabac=0:ref=2:me=umh:bframes=0:weightp=0:subme=6:8x8dct=0:trellis=0\n");
+    printf("\n   + Android Mid:  -e x264  -q 22.0 -r 29.97 --pfr  -a 1 -E " DEFAULT_AAC_ENC " -B 128 -6 dpl2 -R Auto -D 0.0 -f mp4 -X 480 -x cabac=0:ref=2:me=umh:bframes=0:weightp=0:subme=6:8x8dct=0:trellis=0\n");
 
-    printf("\n   + Android High:  -e x264  -q 22.0 -r 29.97 --pfr  -a 1 -E faac -B 128 -6 dpl2 -R Auto -D 0.0 -f mp4 -X 720 --loose-anamorphic -x weightp=0:cabac=0\n");
+    printf("\n   + Android High:  -e x264  -q 22.0 -r 29.97 --pfr  -a 1 -E " DEFAULT_AAC_ENC " -B 128 -6 dpl2 -R Auto -D 0.0 -f mp4 -X 720 --loose-anamorphic -x weightp=0:cabac=0\n");
 
     printf("\n>\n");
 
     printf("\n< Regular\n");
 
-    printf("\n   + Normal:  -e x264  -q 20.0 -a 1 -E faac -B 160 -6 dpl2 -R Auto -D 0.0 -f mp4 --strict-anamorphic -m -x ref=1:weightp=1:subq=2:rc-lookahead=10:trellis=0:8x8dct=0\n");
+    printf("\n   + Normal:  -e x264  -q 20.0 -a 1 -E " DEFAULT_AAC_ENC " -B 160 -6 dpl2 -R Auto -D 0.0 -f mp4 --strict-anamorphic -m -x ref=1:weightp=1:subq=2:rc-lookahead=10:trellis=0:8x8dct=0\n");
 
-    printf("\n   + High Profile:  -e x264  -q 20.0 -a 1,1 -E faac,copy:ac3 -B 160,160 -6 dpl2,auto -R Auto,Auto -D 0.0,0.0 -f mp4 -4 --detelecine --decomb --loose-anamorphic -m -x b-adapt=2:rc-lookahead=50\n");
+    printf("\n   + High Profile:  -e x264  -q 20.0 -a 1,1 -E " DEFAULT_AAC_ENC ",copy:ac3 -B 160,160 -6 dpl2,auto -R Auto,Auto -D 0.0,0.0 -f mp4 -4 --detelecine --decomb --loose-anamorphic -m -x b-adapt=2:rc-lookahead=50\n");
 
     printf("\n>\n");
 
     printf("\n< Legacy\n");
 
-    printf("\n   + Classic:  -b 1000 -a 1 -E faac -B 160 -6 dpl2 -R Auto -D 0.0 -f mp4\n");
+    printf("\n   + Classic:  -b 1000 -a 1 -E " DEFAULT_AAC_ENC " -B 160 -6 dpl2 -R Auto -D 0.0 -f mp4\n");
 
-    printf("\n   + iPod Legacy:  -e x264  -b 1500 -a 1 -E faac -B 160 -6 dpl2 -R Auto -D 0.0 -f mp4 -I -X 640 -m -x level=30:bframes=0:weightp=0:cabac=0:ref=1:vbv-maxrate=1500:vbv-bufsize=2000:analyse=all:me=umh:no-fast-pskip=1:psy-rd=0,0:subme=6:8x8dct=0:trellis=0\n");
+    printf("\n   + iPod Legacy:  -e x264  -b 1500 -a 1 -E " DEFAULT_AAC_ENC " -B 160 -6 dpl2 -R Auto -D 0.0 -f mp4 -I -X 640 -m -x level=30:bframes=0:weightp=0:cabac=0:ref=1:vbv-maxrate=1500:vbv-bufsize=2000:analyse=all:me=umh:no-fast-pskip=1:psy-rd=0,0:subme=6:8x8dct=0:trellis=0\n");
 
     printf("\n>\n");
 
@@ -3639,7 +3669,7 @@ static int CheckOptions( int argc, char ** argv )
             else if( p && !strcasecmp(p, ".mkv" ) )
             {
                 mux = HB_MUX_MKV;
-#ifndef __APPLE_CC__
+#if !defined( __APPLE_CC__ ) || ( defined( __MINGW32__ ) && !defined( USE_QT_AAC ) )
                 // default to Lame for MKV (except under OS X where Core Audio is available)
                 default_acodec = HB_ACODEC_LAME;
 #endif
@@ -3659,7 +3689,7 @@ static int CheckOptions( int argc, char ** argv )
         else if( !strcasecmp( format, "mkv" ) )
         {
             mux = HB_MUX_MKV;
-#ifndef __APPLE_CC__
+#if !defined( __APPLE_CC__ ) || ( defined( __MINGW32__ ) && !defined( USE_QT_AAC ) )
             // default to Lame for MKV (except under OS X where Core Audio is available)
             default_acodec = HB_ACODEC_LAME;
 #endif
