@@ -301,6 +301,9 @@ namespace Handbrake
             this.drp_videoFramerate.FormattingEnabled = true;
             this.drp_videoFramerate.Items.AddRange(new object[] {
             "Same as source",
+            "1",
+            "2",
+            "2.5",
             "5",
             "10",
             "12",
