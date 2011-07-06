@@ -53,7 +53,7 @@ namespace Handbrake.Controls
             drp_audioMix.SelectedItem = "Dolby Pro Logic II";
             drp_audioSample.SelectedIndex = 1;
             drp_audioBitrate.SelectedItem = "160";
-            drp_audioEncoder.SelectedItem = "AAC (faac)";
+            drp_audioEncoder.SelectedItem = "AAC (QuickTime)";
 
             drp_audioTrack.DataSource = this.ScannedTracks;
         }
@@ -123,6 +123,8 @@ namespace Handbrake.Controls
             drp_audioEncoder.Items.Clear();
             drp_audioEncoder.Items.Add(EnumHelper<AudioEncoder>.GetDescription(AudioEncoder.Faac));
             drp_audioEncoder.Items.Add(EnumHelper<AudioEncoder>.GetDescription(AudioEncoder.ffaac));
+            drp_audioEncoder.Items.Add(EnumHelper<AudioEncoder>.GetDescription(AudioEncoder.Qtaac));
+            drp_audioEncoder.Items.Add(EnumHelper<AudioEncoder>.GetDescription(AudioEncoder.Qthaac));
             drp_audioEncoder.Items.Add(EnumHelper<AudioEncoder>.GetDescription(AudioEncoder.AacPassthru));
             drp_audioEncoder.Items.Add(EnumHelper<AudioEncoder>.GetDescription(AudioEncoder.Lame));
             drp_audioEncoder.Items.Add(EnumHelper<AudioEncoder>.GetDescription(AudioEncoder.Mp3Passthru));
@@ -271,6 +273,8 @@ namespace Handbrake.Controls
                     break;
                 case "drp_audioEncoder":
                     SetMixDown(EnumHelper<Mixdown>.GetDescription(track.MixDown));
+                    SetSampleRate(track.SampleRate);
+                    SetBitrate(track.Bitrate);
 
                     // Configure the widgets with values
                     if (drp_audioEncoder.Text.Contains(Passthru))
@@ -308,6 +312,7 @@ namespace Handbrake.Controls
                     double samplerate;
                     double.TryParse(drp_audioSample.Text, out samplerate);
                     track.SampleRate = samplerate;
+                    SetBitrate(track.Bitrate);
                     break;
                 case "drp_audioBitrate":
                     // Update an item in the Audio list if required.
@@ -790,6 +795,122 @@ namespace Handbrake.Controls
         }
 
         /// <summary>
+        /// min/max/default bitrate struct
+        private struct BitRateRange
+        {
+            public int min;
+            public int max;
+            public int def;
+        }
+
+        /// <summary>
+        /// Get min/max/default bitrate according to encoder/mixdown/samplerate
+        /// </summary>
+        private BitRateRange GetBitRateRange( string encoder, string mixdown, double samplerate )
+        {
+            BitRateRange range = new BitRateRange();
+            int channels = mixdown.Contains("Mono") ? 1
+                           : ( mixdown.Contains("6 Channel") ? 6 : 2 );
+            int rate  = samplerate != 0 ? Convert.ToInt32(samplerate*1000) : 44100;
+            int min = 32, max = 768, def = 160;
+
+            switch (encoder)
+            {
+                case "AC3 (ffmpeg)":
+                    min = 32*channels;
+                    if ( rate > 24000 )
+                    {
+                        max = 640;
+                        def = channels == 6 ? 448 : 128*channels;
+                    }
+                    else
+                    {
+                        max = 320;
+                        def = channels == 6 ? 256 : 96*channels;
+                    }
+                    break;
+
+                case "AAC (QuickTime)":
+                    if ( rate > 32000 )
+                    {
+                        min = channels == 6 ? 160 : 32*channels;
+                        max = channels == 6 ? 768 : ( channels == 2 ? 320 : 256 );
+                        def = channels == 6 ? 448 : 80*channels;
+                    }
+                    else if ( rate > 24000 )
+                    {
+                        min = channels == 6 ? 128 : 24*channels;
+                        max = channels == 6 ? 448 : 96*channels;
+                        def = channels == 6 ? 384 : 64*channels;
+                    }
+                    else
+                    {
+                        min = channels == 6 ?  80 : 16*channels;
+                        max = channels == 6 ? 320 : 64*channels;
+                        def = channels == 6 ? 256 : 48*channels;
+                    }
+                    break;
+
+                case "HE-AAC (QuickTime)":
+                    max = channels == 6 ? 192 : 40*channels;
+                    if ( rate > 32000 )
+                    {
+                        min = channels == 6 ?  80 : 16*channels;
+                        def = channels == 6 ? 160 : 32*channels;
+                    }
+                    else
+                    {
+                        min = channels == 6 ?  64 : 12*channels;
+                        def = channels == 6 ? 128 : 24*channels;
+                    }
+                    break;
+
+                case "AAC (faac)":
+                case "AAC (ffmpeg)":
+                    min = 32*channels;
+                    if ( rate > 24000 )
+                    {
+                        max = channels == 6 ? 768 : 160*channels;
+                        def = channels == 6 ? 448 : 80*channels;
+                    }
+                    else
+                    {
+                        max = channels == 6 ? 480 : 96*channels;
+                        def = channels == 6 ? 384 : 64*channels;
+                    }
+                    break;
+
+                case "Vorbis (vorbis)":
+                    if ( rate > 24000 )
+                    {
+                        min = channels == 6 ? 192 : 24*channels;
+                        max = channels == 6 ? 768 : ( rate > 32000 ? 224*channels : 160*channels );
+                        def = channels == 6 ? 448 : 80*channels;
+                    }
+                    else
+                    {
+                        min = 16*channels;
+                        max = 80*channels;
+                        def = channels == 6 ? 384 : 64*channels;
+                    }
+                    break;
+
+               case "MP3 (lame)":
+                    min = 32;
+                    max = rate > 24000 ? 320 : 160;
+                    if ( rate > 24000 )
+                        def = 80*channels;
+                    else
+                        def = 48*channels;
+                    break;
+            }
+            range.min = min;
+            range.max = max;
+            range.def = def;
+            return range;
+        }
+
+        /// <summary>
         /// Set the bitrate dropdown
         /// </summary>
         /// <param name="currentValue">
@@ -797,83 +918,53 @@ namespace Handbrake.Controls
         /// </param>
         private void SetBitrate(int currentValue)
         {
-            int max = 0;
-            string defaultRate = "160";
-
             // Remove defaults
-            drp_audioBitrate.Items.Remove("Auto");
-            drp_audioBitrate.Items.Remove("192");
-            drp_audioBitrate.Items.Remove("224");
-            drp_audioBitrate.Items.Remove("256");
-            drp_audioBitrate.Items.Remove("320");
-            drp_audioBitrate.Items.Remove("384");
-            drp_audioBitrate.Items.Remove("448");
-            drp_audioBitrate.Items.Remove("640");
-            drp_audioBitrate.Items.Remove("768");
-
-            // Find Max and Defaults based on encoders
-            switch (drp_audioEncoder.Text)
-            {
-                case "AAC (faac)":
-                case "AAC (ffmpeg)":
-                    max = drp_audioMix.Text.Contains("6 Channel") ? 768 : 320;
-                    defaultRate = "160";
-                    break;
-                case "MP3 (lame)":
-                    max = 320;
-                    defaultRate = "160";
-                    break;
-                case "Vorbis (vorbis)":
-                    defaultRate = "160";
-                    max = 384;
-                    break;
-                case "AC3 (ffmpeg)":
-                    defaultRate = "640";
-                    max = 640;
-                    break;
-            }
+            drp_audioBitrate.Items.Clear();
 
             if (drp_audioEncoder.Text.Contains(Passthru))
             {
+                // Only add "Auto"
                 drp_audioBitrate.Items.Add("Auto");
-                defaultRate = "Auto";
+                drp_audioBitrate.SelectedItem = "Auto";
                 drp_audioSample.SelectedItem = "Auto";
-            }
-
-            // Re-add appropiate options
-            if (max > 160)
-            {
-                drp_audioBitrate.Items.Add("192");
-                drp_audioBitrate.Items.Add("224");
-                drp_audioBitrate.Items.Add("256");
-                drp_audioBitrate.Items.Add("320");
-            }
-
-            if (max > 320)
-            {
-                drp_audioBitrate.Items.Add("384");
-            }
-
-            if (max >= 640)
-            {
-                drp_audioBitrate.Items.Add("448");
-                drp_audioBitrate.Items.Add("640");
-            }
-
-            if (max == 768)
-            {
-                drp_audioBitrate.Items.Add("768");
-            }
-
-            // Set the Current Value, or default value if the value is out of bounds
-
-            if (currentValue <= max && currentValue != 0)
-            {
-                drp_audioBitrate.SelectedItem = currentValue.ToString();
             }
             else
             {
-                drp_audioBitrate.SelectedItem = defaultRate;
+                // Default bitrates
+                string[] bitrates = new string[] {
+                     "12",  "16",  "24",  "32",  "40",  "48",  "56",  "64",
+                     "80",  "96", "112", "128", "160", "192", "224", "256",
+                    "320", "384", "448", "512", "576", "640", "768"
+                };
+
+                // Find Max and Defaults based on encoders
+                BitRateRange range = new BitRateRange();
+                double rate;
+
+                double.TryParse( drp_audioSample.Text, out rate );
+
+                range = GetBitRateRange( drp_audioEncoder.Text,
+                                         drp_audioMix.Text,
+                                         rate );
+
+                // Reset to defaults except for "Auto"
+                drp_audioBitrate.Items.AddRange( bitrates );
+
+                foreach (string value in bitrates )
+                {
+                   if (Convert.ToInt32( value ) < range.min || Convert.ToInt32( value ) > range.max)
+                       drp_audioBitrate.Items.Remove( value );
+                }
+
+                // Set the Current Value, or default value if the value is out of bounds
+                if (currentValue != 0 && currentValue >= range.min && currentValue <= range.max)
+                {
+                    drp_audioBitrate.SelectedItem = currentValue.ToString();
+                }
+                else
+                {
+                    drp_audioBitrate.SelectedItem = range.def.ToString();
+                }
             }
         }
 
@@ -886,45 +977,94 @@ namespace Handbrake.Controls
         private void SetMixDown(string currentMixdown)
         {
             drp_audioMix.Items.Clear();
-            drp_audioMix.Items.Add("Mono");
-            drp_audioMix.Items.Add("Stereo");
-            drp_audioMix.Items.Add("Dolby Surround");
-            drp_audioMix.Items.Add("Dolby Pro Logic II");
-            drp_audioMix.Items.Add("6 Channel Discrete");
-            drp_audioMix.Items.Add(Passthru);
 
-            switch (drp_audioEncoder.Text)
+            if (drp_audioEncoder.Text.Contains(Passthru))
             {
-                case "AAC (faac)":
-                case "AAC (ffmpeg)":
-                    drp_audioMix.Items.Remove(Passthru);
-                    drp_audioMix.SelectedItem = currentMixdown ?? "Dolby Pro Logic II";
-                    break;
-                case "MP3 (lame)":
-                    drp_audioMix.Items.Remove("6 Channel Discrete");
-                    drp_audioMix.Items.Remove(Passthru);
-                    drp_audioMix.SelectedItem = currentMixdown ?? "Dolby Pro Logic II";
-                    break;
-                case "Vorbis (vorbis)":
-                    drp_audioMix.Items.Remove(Passthru);
-                    drp_audioMix.SelectedItem = currentMixdown ?? "Dolby Pro Logic II";
-                    break;
-                case "AC3 (ffmpeg)":
-                    drp_audioMix.Items.Remove(Passthru);
-                    drp_audioMix.SelectedItem = currentMixdown ?? "Dolby Pro Logic II";
-                    break;
-                case "AC3 Passthru":
-                case "DTS Passthru":
-                case "DTS-HD Passthru":
-                case "AAC Passthru":
-                case "MP3 Passthru":
-                    drp_audioMix.SelectedItem = Passthru;
-                    break;
+                drp_audioMix.Items.Add(Passthru);
+                drp_audioMix.SelectedItem = Passthru;
             }
-
-            if (drp_audioMix.SelectedItem == null)
+            else
             {
-                drp_audioMix.SelectedItem = "Dolby Pro Logic II";
+                // Default MixDowns
+                string[] mixdowns = new string[] {
+                    "Mono", "Stereo", "Dolby Surround",
+                    "Dolby Pro Logic II", "6 Channel Discrete"
+                };
+
+                // Reset to defaults except for Passthru
+                drp_audioMix.Items.AddRange( mixdowns );
+
+                switch (drp_audioEncoder.Text)
+                {
+                    case "AAC (faac)":
+                    case "AAC (ffmpeg)":
+                    case "AAC (QuickTime)":
+                    case "HE-AAC (QuickTime)":
+                    case "Vorbis (vorbis)":
+                    case "AC3 (ffmpeg)":
+                        break;
+                    case "MP3 (lame)":
+                        drp_audioMix.Items.Remove("6 Channel Discrete");
+                        if( currentMixdown == "6 Channel Discrete" )
+                            currentMixdown = "Dolby Pro Logic II";
+                        break;
+                }
+
+                if( currentMixdown.Contains(Passthru) )
+                {
+                    drp_audioMix.SelectedItem = "Dolby Pro Logic II";
+                }
+                else
+                {
+                    drp_audioMix.SelectedItem = currentMixdown != null ? currentMixdown : "Dolby Pro Logic II";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set the samplerate dropdown
+        /// </summary>
+        /// <param name="currentSampleate">
+        /// The current Mixdown.
+        /// </param>
+        private void SetSampleRate(double currentSamplerate)
+        {
+            drp_audioSample.Items.Clear();
+
+            if (drp_audioEncoder.Text.Contains(Passthru))
+            {
+                drp_audioSample.Items.Add("Auto");
+                drp_audioSample.SelectedItem = "Auto";
+            }
+            else
+            {
+                string[] samplerates = new string[] {"Auto", "48", "44.1", "32", "24", "22.05" };
+
+                drp_audioSample.Items.AddRange( samplerates );
+
+                switch (drp_audioEncoder.Text)
+                {
+                    case "HE-AAC (QuickTime)":
+                        drp_audioSample.Items.Remove("24");
+                        drp_audioSample.Items.Remove("22.05");
+                        break;
+                    case "AAC (faac)":
+                    case "AAC (ffmpeg)":
+                    case "AAC (QuickTime)":
+                    case "Vorbis (vorbis)":
+                    case "AC3 (ffmpeg)":
+                    case "MP3 (lame)":
+                    break;
+                }
+
+                if( currentSamplerate != 0 && drp_audioSample.Items.Contains( currentSamplerate.ToString("##.##") ) )
+                {
+                    drp_audioSample.SelectedItem = currentSamplerate.ToString("##.##");
+                }
+                else
+                {
+                    drp_audioSample.SelectedItem = "Auto";
+                }
             }
         }
 
@@ -1018,7 +1158,7 @@ namespace Handbrake.Controls
                 return AudioEncoder.Mp3Passthru;
             }
 
-            return AudioEncoder.Faac;
+            return AudioEncoder.Qtaac;
         }
 
         #endregion
