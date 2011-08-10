@@ -301,6 +301,9 @@ namespace Handbrake
             this.drp_videoFramerate.FormattingEnabled = true;
             this.drp_videoFramerate.Items.AddRange(new object[] {
             "Same as source",
+            "1",
+            "2",
+            "2.5",
             "5",
             "10",
             "12",
@@ -956,7 +959,7 @@ namespace Handbrake
             this.PictureSettings.Location = new System.Drawing.Point(0, 0);
             this.PictureSettings.Name = "PictureSettings";
             this.PictureSettings.PresetMaximumResolution = new System.Drawing.Size(0, 0);
-            this.PictureSettings.Size = new System.Drawing.Size(666, 279);
+            this.PictureSettings.Size = new System.Drawing.Size(720, 305);
             this.PictureSettings.TabIndex = 0;
             // 
             // Check_ChapterMarkers

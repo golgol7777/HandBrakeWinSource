@@ -96,7 +96,10 @@ namespace Handbrake.Functions
             mainWindow.PictureSettings.check_autoCrop.Checked = true;
             if (presetQuery.IsCustomCropping)
             {
-                mainWindow.PictureSettings.check_customCrop.Checked = true;
+                if( presetQuery.Cropping.Top != 0 || presetQuery.Cropping.Bottom != 0 || presetQuery.Cropping.Left != 0 || presetQuery.Cropping.Right != 0 )
+                    mainWindow.PictureSettings.check_customCrop.Checked = true;
+                else
+                    mainWindow.PictureSettings.check_disableCrop.Checked = true;
                 mainWindow.PictureSettings.crop_top.Value = presetQuery.Cropping.Top;
                 mainWindow.PictureSettings.crop_bottom.Value = presetQuery.Cropping.Bottom;
                 mainWindow.PictureSettings.crop_left.Value = presetQuery.Cropping.Left;
@@ -175,11 +178,53 @@ namespace Handbrake.Functions
             }
 
             // Custom Anamorphic Controls
-            mainWindow.PictureSettings.updownDisplayWidth.Text = presetQuery.DisplayWidth.ToString();
-            mainWindow.PictureSettings.updownParHeight.Text = presetQuery.PixelAspectY.ToString();
-            mainWindow.PictureSettings.updownParWidth.Text = presetQuery.PixelAspectX.ToString();
-            mainWindow.PictureSettings.drp_modulus.SelectedItem = presetQuery.Modulus.ToString();
+            if(presetQuery.DisplayWidth.HasValue)
+                mainWindow.PictureSettings.updownDisplayWidth.Text = presetQuery.DisplayWidth.Value.ToString();
+            if(presetQuery.PixelAspectY != 0)
+                mainWindow.PictureSettings.updownParHeight.Text = presetQuery.PixelAspectY.ToString();
+            if(presetQuery.PixelAspectX != 0)
+                mainWindow.PictureSettings.updownParWidth.Text = presetQuery.PixelAspectX.ToString();
+            if(presetQuery.Modulus.HasValue)
+                mainWindow.PictureSettings.drp_modulus.SelectedItem = presetQuery.Modulus.ToString();
 
+            switch (presetQuery.ColorMatrix)
+            {
+                case 709:
+                    mainWindow.PictureSettings.drp_colormatrix.SelectedIndex = 1;
+                    break;
+                case 601:
+                    mainWindow.PictureSettings.drp_colormatrix.SelectedIndex = 2;
+                    break;
+                default:
+                    mainWindow.PictureSettings.drp_colormatrix.SelectedIndex = 0;
+                    break;
+            }
+
+           mainWindow.PictureSettings.check_UseITUPar.Checked = presetQuery.UseITUPar;
+
+            // pad valued are loaded only if picture settings are stored in preset
+            // and have to wait modulus values are set because pad values are rounded
+            // to multiples of modulus value
+            if (presetQuery.Anamorphic == Anamorphic.None || presetQuery.Anamorphic == Anamorphic.Custom)
+            {
+                mainWindow.PictureSettings.check_enablePad.Enabled = true;
+                mainWindow.PictureSettings.check_enablePad.Checked = presetQuery.PaddingEnabled;
+                mainWindow.PictureSettings.check_disablePad.Checked = !presetQuery.PaddingEnabled;
+                mainWindow.PictureSettings.pad_top.Value = presetQuery.Padding.Top.HasValue ? presetQuery.Padding.Top.Value : 0;
+                mainWindow.PictureSettings.pad_bottom.Value = presetQuery.Padding.Bottom.HasValue ? presetQuery.Padding.Bottom.Value : 0;
+                mainWindow.PictureSettings.pad_left.Value = presetQuery.Padding.Left.HasValue ? presetQuery.Padding.Left.Value : 0;
+                mainWindow.PictureSettings.pad_right.Value = presetQuery.Padding.Right.HasValue ? presetQuery.Padding.Right.Value : 0;
+            }
+            else
+            {
+                mainWindow.PictureSettings.check_enablePad.Enabled
+                  = mainWindow.PictureSettings.check_enablePad.Checked = false;
+                mainWindow.PictureSettings.check_disablePad.Checked = true;
+                mainWindow.PictureSettings.pad_top.Value
+                  = mainWindow.PictureSettings.pad_bottom.Value
+                  = mainWindow.PictureSettings.pad_left.Value
+                  = mainWindow.PictureSettings.pad_right.Value = 0;
+            }
             #endregion
 
             #region Filters
@@ -190,6 +235,7 @@ namespace Handbrake.Functions
             mainWindow.Filters.SetDeTelecine(presetQuery.Detelecine, presetQuery.CustomDetelecine);
             mainWindow.Filters.SetDeBlock(presetQuery.Deblock);
             mainWindow.Filters.SetGrayScale(presetQuery.Grayscale);
+            mainWindow.Filters.SetColorSpaceConverter(presetQuery.ColorSpaceConverter);
 
             #endregion
 

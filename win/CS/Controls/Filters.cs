@@ -32,6 +32,7 @@ namespace Handbrake.Controls
             drop_deinterlace.SelectedIndex = 0;
             drop_denoise.SelectedIndex = 0;
             drop_detelecine.SelectedIndex = 0;
+            check_colorspace.Checked = false;
         }
 
         /// <summary>
@@ -124,6 +125,14 @@ namespace Handbrake.Controls
 
                 if (check_grayscale.Checked)
                     query += " -g ";
+
+                if (check_colorspace.Checked) // Colorspace
+                {
+                    if (btn_colorspace709to601.Checked)
+                        query += " --colorspace 709:601";
+                    else if (btn_colorspace601to709.Checked)
+                        query += " --colorspace 601:709";
+                }
 
                 return query;
             }
@@ -285,6 +294,29 @@ namespace Handbrake.Controls
             check_grayscale.CheckState = value ? CheckState.Checked : CheckState.Unchecked;
         }
 
+        /// <summary>
+        /// Set the ColorSpaceConverter Control
+        /// </summary>
+        /// <param name="value">The value part of the CLI string</param>
+        public void SetColorSpaceConverter(ColorSpaceConverter value)
+        {
+            check_colorspace.Checked = false;
+
+            switch (value)
+            {
+                case ColorSpaceConverter.Convert709to601:
+                    check_colorspace.Checked = true;
+                    btn_colorspace709to601.Checked = true;
+                    break;
+                case ColorSpaceConverter.Convert601to709:
+                    check_colorspace.Checked = true;
+                    btn_colorspace601to709.Checked = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
         // Controls
         private void DropDetelecineSelectedIndexChanged(object sender, EventArgs e)
         {
@@ -328,6 +360,16 @@ namespace Handbrake.Controls
         private void SliderDeblockScroll(object sender, EventArgs e)
         {
             lbl_deblockVal.Text = slider_deblock.Value == 4 ? "Off" : slider_deblock.Value.ToString();
+
+            // A Filter has changed so raise a FilterSettingsChanged event.
+            if (this.FilterSettingsChanged != null)
+                this.FilterSettingsChanged(this, new EventArgs());
+        }
+
+        private void CheckColorspaceCheckedChanged(object sender, EventArgs e)
+        {
+            btn_colorspace709to601.Visible = check_colorspace.Checked;
+            btn_colorspace601to709.Visible = check_colorspace.Checked;
 
             // A Filter has changed so raise a FilterSettingsChanged event.
             if (this.FilterSettingsChanged != null)
