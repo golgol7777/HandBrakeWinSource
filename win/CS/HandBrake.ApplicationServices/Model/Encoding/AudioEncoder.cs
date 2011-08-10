@@ -18,6 +18,12 @@ namespace HandBrake.ApplicationServices.Model.Encoding
         [Description("AAC (ffmpeg)")]
         ffaac,
 
+        [Description("AAC (QuickTime)")]
+        Qtaac,
+
+        [Description("HE-AAC (QuickTime)")]
+        Qthaac,
+
         [Description("MP3 (lame)")]
         Lame,
 

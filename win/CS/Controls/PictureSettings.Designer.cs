@@ -28,28 +28,32 @@ namespace Handbrake.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.Label15 = new System.Windows.Forms.Label();
+            this.tbl_cropping = new System.Windows.Forms.TableLayoutPanel();
+            this.lbl_cropLeft = new System.Windows.Forms.Label();
             this.crop_left = new System.Windows.Forms.NumericUpDown();
             this.crop_right = new System.Windows.Forms.NumericUpDown();
             this.check_autoCrop = new System.Windows.Forms.RadioButton();
-            this.Label51 = new System.Windows.Forms.Label();
+            this.lbl_cropRight = new System.Windows.Forms.Label();
             this.crop_top = new System.Windows.Forms.NumericUpDown();
-            this.Label53 = new System.Windows.Forms.Label();
-            this.Label52 = new System.Windows.Forms.Label();
+            this.lbl_cropBottom = new System.Windows.Forms.Label();
+            this.lbl_cropTop = new System.Windows.Forms.Label();
             this.crop_bottom = new System.Windows.Forms.NumericUpDown();
             this.check_customCrop = new System.Windows.Forms.RadioButton();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.label7 = new System.Windows.Forms.Label();
+            this.tbl_size = new System.Windows.Forms.TableLayoutPanel();
+            this.lbl_src = new System.Windows.Forms.Label();
             this.lbl_src_res = new System.Windows.Forms.Label();
-            this.Label55 = new System.Windows.Forms.Label();
+            this.lbl_width = new System.Windows.Forms.Label();
             this.text_width = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
+            this.lbl_height = new System.Windows.Forms.Label();
             this.text_height = new System.Windows.Forms.NumericUpDown();
             this.check_KeepAR = new System.Windows.Forms.CheckBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.check_UseITUPar = new System.Windows.Forms.CheckBox();
+            this.lbl_useITUPar = new System.Windows.Forms.Label();
+            this.tbl_anamorphic = new System.Windows.Forms.TableLayoutPanel();
+            this.drp_colormatrix = new System.Windows.Forms.ComboBox();
+            this.lbl_colormatrix = new System.Windows.Forms.Label();
             this.updownParHeight = new System.Windows.Forms.NumericUpDown();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lbl_anamorphic = new System.Windows.Forms.Label();
             this.labelDisplaySize = new System.Windows.Forms.Label();
             this.lbl_parHeight = new System.Windows.Forms.Label();
             this.labelStaticDisplaySize = new System.Windows.Forms.Label();
@@ -60,67 +64,85 @@ namespace Handbrake.Controls
             this.lbl_modulus = new System.Windows.Forms.Label();
             this.lbl_displayWidth = new System.Windows.Forms.Label();
             this.drp_modulus = new System.Windows.Forms.ComboBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label26 = new System.Windows.Forms.Label();
+            this.lbl_cropping = new System.Windows.Forms.Label();
+            this.lbl_size = new System.Windows.Forms.Label();
             this.lbl_presetCropWarning = new System.Windows.Forms.Label();
-            this.tableLayoutPanel3.SuspendLayout();
+            this.lbl_padding = new System.Windows.Forms.Label();
+            this.tbl_padding = new System.Windows.Forms.TableLayoutPanel();
+            this.pad_right = new System.Windows.Forms.NumericUpDown();
+            this.check_disablePad = new System.Windows.Forms.RadioButton();
+            this.lbl_padLeft = new System.Windows.Forms.Label();
+            this.pad_left = new System.Windows.Forms.NumericUpDown();
+            this.lbl_padRight = new System.Windows.Forms.Label();
+            this.check_enablePad = new System.Windows.Forms.RadioButton();
+            this.lbl_padTop = new System.Windows.Forms.Label();
+            this.pad_top = new System.Windows.Forms.NumericUpDown();
+            this.pad_bottom = new System.Windows.Forms.NumericUpDown();
+            this.lbl_padBottom = new System.Windows.Forms.Label();
+            this.check_disableCrop = new System.Windows.Forms.RadioButton();
+            this.tbl_cropping.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.crop_left)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.crop_right)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.crop_top)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.crop_bottom)).BeginInit();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.tbl_size.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.text_width)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.text_height)).BeginInit();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.tbl_anamorphic.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updownParHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.updownParWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.updownDisplayWidth)).BeginInit();
+            this.tbl_padding.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pad_right)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pad_left)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pad_top)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pad_bottom)).BeginInit();
             this.SuspendLayout();
             // 
-            // tableLayoutPanel3
+            // tbl_cropping
             // 
-            this.tableLayoutPanel3.AutoSize = true;
-            this.tableLayoutPanel3.ColumnCount = 5;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.Controls.Add(this.Label15, 0, 4);
-            this.tableLayoutPanel3.Controls.Add(this.crop_left, 1, 4);
-            this.tableLayoutPanel3.Controls.Add(this.crop_right, 3, 4);
-            this.tableLayoutPanel3.Controls.Add(this.check_autoCrop, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.Label51, 4, 4);
-            this.tableLayoutPanel3.Controls.Add(this.crop_top, 2, 3);
-            this.tableLayoutPanel3.Controls.Add(this.Label53, 2, 6);
-            this.tableLayoutPanel3.Controls.Add(this.Label52, 2, 2);
-            this.tableLayoutPanel3.Controls.Add(this.crop_bottom, 2, 5);
-            this.tableLayoutPanel3.Controls.Add(this.check_customCrop, 0, 1);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(419, 35);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 7;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(217, 165);
-            this.tableLayoutPanel3.TabIndex = 117;
+            this.tbl_cropping.AutoSize = true;
+            this.tbl_cropping.ColumnCount = 6;
+            this.tbl_cropping.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 96F));
+            this.tbl_cropping.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_cropping.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_cropping.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_cropping.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_cropping.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_cropping.Controls.Add(this.lbl_cropLeft, 1, 2);
+            this.tbl_cropping.Controls.Add(this.crop_left, 2, 2);
+            this.tbl_cropping.Controls.Add(this.crop_right, 4, 2);
+            this.tbl_cropping.Controls.Add(this.check_autoCrop, 0, 0);
+            this.tbl_cropping.Controls.Add(this.lbl_cropRight, 5, 2);
+            this.tbl_cropping.Controls.Add(this.crop_top, 3, 1);
+            this.tbl_cropping.Controls.Add(this.lbl_cropBottom, 3, 4);
+            this.tbl_cropping.Controls.Add(this.lbl_cropTop, 3, 0);
+            this.tbl_cropping.Controls.Add(this.crop_bottom, 3, 3);
+            this.tbl_cropping.Controls.Add(this.check_customCrop, 0, 1);
+            this.tbl_cropping.Controls.Add(this.check_disableCrop, 0, 2);
+            this.tbl_cropping.Location = new System.Drawing.Point(338, 35);
+            this.tbl_cropping.Name = "tbl_cropping";
+            this.tbl_cropping.RowCount = 5;
+            this.tbl_cropping.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_cropping.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_cropping.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_cropping.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_cropping.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_cropping.Size = new System.Drawing.Size(313, 123);
+            this.tbl_cropping.TabIndex = 117;
             // 
-            // Label15
+            // lbl_cropLeft
             // 
-            this.Label15.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.Label15.AutoSize = true;
-            this.Label15.BackColor = System.Drawing.Color.Transparent;
-            this.Label15.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Label15.Location = new System.Drawing.Point(0, 99);
-            this.Label15.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
-            this.Label15.Name = "Label15";
-            this.Label15.Size = new System.Drawing.Size(26, 13);
-            this.Label15.TabIndex = 97;
-            this.Label15.Text = "Left";
+            this.lbl_cropLeft.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lbl_cropLeft.AutoSize = true;
+            this.lbl_cropLeft.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_cropLeft.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_cropLeft.Location = new System.Drawing.Point(96, 57);
+            this.lbl_cropLeft.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+            this.lbl_cropLeft.Name = "lbl_cropLeft";
+            this.lbl_cropLeft.Size = new System.Drawing.Size(26, 13);
+            this.lbl_cropLeft.TabIndex = 97;
+            this.lbl_cropLeft.Text = "Left";
             // 
             // crop_left
             // 
@@ -130,7 +152,7 @@ namespace Handbrake.Controls
             0,
             0,
             0});
-            this.crop_left.Location = new System.Drawing.Point(32, 95);
+            this.crop_left.Location = new System.Drawing.Point(128, 53);
             this.crop_left.Maximum = new decimal(new int[] {
             128000,
             0,
@@ -149,7 +171,7 @@ namespace Handbrake.Controls
             0,
             0,
             0});
-            this.crop_right.Location = new System.Drawing.Point(132, 95);
+            this.crop_right.Location = new System.Drawing.Point(228, 53);
             this.crop_right.Maximum = new decimal(new int[] {
             128000,
             0,
@@ -164,7 +186,6 @@ namespace Handbrake.Controls
             // 
             this.check_autoCrop.AutoSize = true;
             this.check_autoCrop.Checked = true;
-            this.tableLayoutPanel3.SetColumnSpan(this.check_autoCrop, 5);
             this.check_autoCrop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.check_autoCrop.Location = new System.Drawing.Point(0, 3);
             this.check_autoCrop.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
@@ -176,18 +197,18 @@ namespace Handbrake.Controls
             this.check_autoCrop.UseVisualStyleBackColor = true;
             this.check_autoCrop.CheckedChanged += new System.EventHandler(this.CheckAutoCropCheckedChanged);
             // 
-            // Label51
+            // lbl_cropRight
             // 
-            this.Label51.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.Label51.AutoSize = true;
-            this.Label51.BackColor = System.Drawing.Color.Transparent;
-            this.Label51.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Label51.Location = new System.Drawing.Point(182, 99);
-            this.Label51.Margin = new System.Windows.Forms.Padding(3);
-            this.Label51.Name = "Label51";
-            this.Label51.Size = new System.Drawing.Size(32, 13);
-            this.Label51.TabIndex = 102;
-            this.Label51.Text = "Right";
+            this.lbl_cropRight.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lbl_cropRight.AutoSize = true;
+            this.lbl_cropRight.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_cropRight.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_cropRight.Location = new System.Drawing.Point(278, 57);
+            this.lbl_cropRight.Margin = new System.Windows.Forms.Padding(3);
+            this.lbl_cropRight.Name = "lbl_cropRight";
+            this.lbl_cropRight.Size = new System.Drawing.Size(32, 13);
+            this.lbl_cropRight.TabIndex = 102;
+            this.lbl_cropRight.Text = "Right";
             // 
             // crop_top
             // 
@@ -197,7 +218,7 @@ namespace Handbrake.Controls
             0,
             0,
             0});
-            this.crop_top.Location = new System.Drawing.Point(82, 68);
+            this.crop_top.Location = new System.Drawing.Point(178, 26);
             this.crop_top.Maximum = new decimal(new int[] {
             128000,
             0,
@@ -208,31 +229,31 @@ namespace Handbrake.Controls
             this.crop_top.TabIndex = 100;
             this.crop_top.ValueChanged += new System.EventHandler(this.CropValueChanged);
             // 
-            // Label53
+            // lbl_cropBottom
             // 
-            this.Label53.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.Label53.AutoSize = true;
-            this.Label53.BackColor = System.Drawing.Color.Transparent;
-            this.Label53.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Label53.Location = new System.Drawing.Point(83, 149);
-            this.Label53.Margin = new System.Windows.Forms.Padding(3);
-            this.Label53.Name = "Label53";
-            this.Label53.Size = new System.Drawing.Size(41, 13);
-            this.Label53.TabIndex = 104;
-            this.Label53.Text = "Bottom";
+            this.lbl_cropBottom.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lbl_cropBottom.AutoSize = true;
+            this.lbl_cropBottom.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_cropBottom.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_cropBottom.Location = new System.Drawing.Point(179, 107);
+            this.lbl_cropBottom.Margin = new System.Windows.Forms.Padding(3);
+            this.lbl_cropBottom.Name = "lbl_cropBottom";
+            this.lbl_cropBottom.Size = new System.Drawing.Size(41, 13);
+            this.lbl_cropBottom.TabIndex = 104;
+            this.lbl_cropBottom.Text = "Bottom";
             // 
-            // Label52
+            // lbl_cropTop
             // 
-            this.Label52.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.Label52.AutoSize = true;
-            this.Label52.BackColor = System.Drawing.Color.Transparent;
-            this.Label52.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Label52.Location = new System.Drawing.Point(91, 49);
-            this.Label52.Margin = new System.Windows.Forms.Padding(3);
-            this.Label52.Name = "Label52";
-            this.Label52.Size = new System.Drawing.Size(25, 13);
-            this.Label52.TabIndex = 99;
-            this.Label52.Text = "Top";
+            this.lbl_cropTop.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.lbl_cropTop.AutoSize = true;
+            this.lbl_cropTop.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_cropTop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_cropTop.Location = new System.Drawing.Point(187, 7);
+            this.lbl_cropTop.Margin = new System.Windows.Forms.Padding(3);
+            this.lbl_cropTop.Name = "lbl_cropTop";
+            this.lbl_cropTop.Size = new System.Drawing.Size(25, 13);
+            this.lbl_cropTop.TabIndex = 99;
+            this.lbl_cropTop.Text = "Top";
             // 
             // crop_bottom
             // 
@@ -242,7 +263,7 @@ namespace Handbrake.Controls
             0,
             0,
             0});
-            this.crop_bottom.Location = new System.Drawing.Point(82, 122);
+            this.crop_bottom.Location = new System.Drawing.Point(178, 80);
             this.crop_bottom.Maximum = new decimal(new int[] {
             128000,
             0,
@@ -255,54 +276,57 @@ namespace Handbrake.Controls
             // 
             // check_customCrop
             // 
+            this.check_customCrop.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.check_customCrop.AutoSize = true;
-            this.tableLayoutPanel3.SetColumnSpan(this.check_customCrop, 5);
             this.check_customCrop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.check_customCrop.Location = new System.Drawing.Point(0, 26);
+            this.check_customCrop.Location = new System.Drawing.Point(0, 28);
             this.check_customCrop.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
             this.check_customCrop.Name = "check_customCrop";
             this.check_customCrop.Size = new System.Drawing.Size(61, 17);
             this.check_customCrop.TabIndex = 106;
             this.check_customCrop.Text = "Custom";
             this.check_customCrop.UseVisualStyleBackColor = true;
+            this.check_customCrop.CheckedChanged += new System.EventHandler(this.CheckAutoCropCheckedChanged);
             // 
-            // tableLayoutPanel2
+            // tbl_size
             // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.ColumnCount = 5;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.label7, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.lbl_src_res, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.Label55, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.text_width, 1, 1);
-            this.tableLayoutPanel2.Controls.Add(this.label4, 2, 1);
-            this.tableLayoutPanel2.Controls.Add(this.text_height, 3, 1);
-            this.tableLayoutPanel2.Controls.Add(this.check_KeepAR, 1, 2);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(16, 35);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 3;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(376, 69);
-            this.tableLayoutPanel2.TabIndex = 116;
+            this.tbl_size.AutoSize = true;
+            this.tbl_size.ColumnCount = 4;
+            this.tbl_size.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_size.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_size.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_size.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_size.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tbl_size.Controls.Add(this.lbl_src, 0, 0);
+            this.tbl_size.Controls.Add(this.lbl_src_res, 1, 0);
+            this.tbl_size.Controls.Add(this.lbl_width, 0, 1);
+            this.tbl_size.Controls.Add(this.text_width, 1, 1);
+            this.tbl_size.Controls.Add(this.lbl_height, 2, 1);
+            this.tbl_size.Controls.Add(this.text_height, 3, 1);
+            this.tbl_size.Controls.Add(this.check_KeepAR, 1, 2);
+            this.tbl_size.Controls.Add(this.check_UseITUPar, 2, 2);
+            this.tbl_size.Controls.Add(this.lbl_useITUPar, 2, 0);
+            this.tbl_size.Location = new System.Drawing.Point(16, 35);
+            this.tbl_size.Name = "tbl_size";
+            this.tbl_size.RowCount = 3;
+            this.tbl_size.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_size.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_size.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_size.Size = new System.Drawing.Size(238, 69);
+            this.tbl_size.TabIndex = 116;
             // 
-            // label7
+            // lbl_src
             // 
-            this.label7.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label7.AutoSize = true;
-            this.label7.BackColor = System.Drawing.Color.Transparent;
-            this.label7.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label7.Location = new System.Drawing.Point(0, 3);
-            this.label7.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(44, 13);
-            this.label7.TabIndex = 76;
-            this.label7.Text = "Source:";
+            this.lbl_src.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lbl_src.AutoSize = true;
+            this.lbl_src.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_src.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_src.Location = new System.Drawing.Point(0, 3);
+            this.lbl_src.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+            this.lbl_src.Name = "lbl_src";
+            this.lbl_src.Size = new System.Drawing.Size(44, 13);
+            this.lbl_src.TabIndex = 76;
+            this.lbl_src.Text = "Source:";
             // 
             // lbl_src_res
             // 
@@ -317,19 +341,19 @@ namespace Handbrake.Controls
             this.lbl_src_res.TabIndex = 77;
             this.lbl_src_res.Text = "--";
             // 
-            // Label55
+            // lbl_width
             // 
-            this.Label55.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.Label55.AutoSize = true;
-            this.Label55.BackColor = System.Drawing.Color.Transparent;
-            this.Label55.ForeColor = System.Drawing.Color.Black;
-            this.Label55.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Label55.Location = new System.Drawing.Point(0, 26);
-            this.Label55.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
-            this.Label55.Name = "Label55";
-            this.Label55.Size = new System.Drawing.Size(39, 13);
-            this.Label55.TabIndex = 80;
-            this.Label55.Text = "Width:";
+            this.lbl_width.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lbl_width.AutoSize = true;
+            this.lbl_width.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_width.ForeColor = System.Drawing.Color.Black;
+            this.lbl_width.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_width.Location = new System.Drawing.Point(0, 26);
+            this.lbl_width.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+            this.lbl_width.Name = "lbl_width";
+            this.lbl_width.Size = new System.Drawing.Size(39, 13);
+            this.lbl_width.TabIndex = 80;
+            this.lbl_width.Text = "Width:";
             // 
             // text_width
             // 
@@ -344,23 +368,23 @@ namespace Handbrake.Controls
             this.text_width.TabIndex = 85;
             this.text_width.ValueChanged += new System.EventHandler(this.TextWidthValueChanged);
             // 
-            // label4
+            // lbl_height
             // 
-            this.label4.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label4.AutoSize = true;
-            this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.ForeColor = System.Drawing.Color.Black;
-            this.label4.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label4.Location = new System.Drawing.Point(120, 26);
-            this.label4.Margin = new System.Windows.Forms.Padding(3);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(42, 13);
-            this.label4.TabIndex = 84;
-            this.label4.Text = "Height:";
+            this.lbl_height.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lbl_height.AutoSize = true;
+            this.lbl_height.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_height.ForeColor = System.Drawing.Color.Black;
+            this.lbl_height.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_height.Location = new System.Drawing.Point(123, 26);
+            this.lbl_height.Margin = new System.Windows.Forms.Padding(3);
+            this.lbl_height.Name = "lbl_height";
+            this.lbl_height.Size = new System.Drawing.Size(42, 13);
+            this.lbl_height.TabIndex = 84;
+            this.lbl_height.Text = "Height:";
             // 
             // text_height
             // 
-            this.text_height.Location = new System.Drawing.Point(168, 22);
+            this.text_height.Location = new System.Drawing.Point(171, 22);
             this.text_height.Maximum = new decimal(new int[] {
             1280000,
             0,
@@ -376,46 +400,98 @@ namespace Handbrake.Controls
             this.check_KeepAR.AutoSize = true;
             this.check_KeepAR.Checked = true;
             this.check_KeepAR.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tableLayoutPanel2.SetColumnSpan(this.check_KeepAR, 3);
             this.check_KeepAR.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.check_KeepAR.Location = new System.Drawing.Point(50, 49);
             this.check_KeepAR.Name = "check_KeepAR";
-            this.check_KeepAR.Size = new System.Drawing.Size(114, 17);
+            this.check_KeepAR.Size = new System.Drawing.Size(67, 17);
             this.check_KeepAR.TabIndex = 95;
-            this.check_KeepAR.Text = "Keep Aspect Ratio";
+            this.check_KeepAR.Text = "Keep AR";
             this.check_KeepAR.UseVisualStyleBackColor = true;
             this.check_KeepAR.CheckedChanged += new System.EventHandler(this.CheckKeepArCheckedChanged);
             // 
-            // tableLayoutPanel1
+            // check_UseITUPar
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.updownParHeight, 1, 4);
-            this.tableLayoutPanel1.Controls.Add(this.label6, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.labelDisplaySize, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.lbl_parHeight, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.labelStaticDisplaySize, 0, 5);
-            this.tableLayoutPanel1.Controls.Add(this.updownParWidth, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.drp_anamorphic, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.lbl_parWidth, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.updownDisplayWidth, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.lbl_modulus, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lbl_displayWidth, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.drp_modulus, 1, 1);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(16, 110);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 6;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(195, 154);
-            this.tableLayoutPanel1.TabIndex = 115;
+            this.check_UseITUPar.AutoSize = true;
+            this.tbl_size.SetColumnSpan(this.check_UseITUPar, 2);
+            this.check_UseITUPar.Enabled = false;
+            this.check_UseITUPar.Location = new System.Drawing.Point(123, 49);
+            this.check_UseITUPar.Name = "check_UseITUPar";
+            this.check_UseITUPar.Size = new System.Drawing.Size(87, 17);
+            this.check_UseITUPar.TabIndex = 96;
+            this.check_UseITUPar.Text = "Use ITU PAR";
+            this.check_UseITUPar.UseVisualStyleBackColor = true;
+            this.check_UseITUPar.CheckedChanged += new System.EventHandler(this.CheckITUParCheckedChanged);
+            // 
+            // lbl_useITUPar
+            // 
+            this.lbl_useITUPar.AutoSize = true;
+            this.tbl_size.SetColumnSpan(this.lbl_useITUPar, 2);
+            this.lbl_useITUPar.Location = new System.Drawing.Point(123, 3);
+            this.lbl_useITUPar.Margin = new System.Windows.Forms.Padding(3);
+            this.lbl_useITUPar.Name = "lbl_useITUPar";
+            this.lbl_useITUPar.Size = new System.Drawing.Size(91, 13);
+            this.lbl_useITUPar.TabIndex = 97;
+            this.lbl_useITUPar.Text = "(ITU par is used!)";
+            this.lbl_useITUPar.Visible = false;
+            // 
+            // tbl_anamorphic
+            // 
+            this.tbl_anamorphic.AutoSize = true;
+            this.tbl_anamorphic.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tbl_anamorphic.ColumnCount = 2;
+            this.tbl_anamorphic.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_anamorphic.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_anamorphic.Controls.Add(this.drp_colormatrix, 1, 6);
+            this.tbl_anamorphic.Controls.Add(this.lbl_colormatrix, 0, 6);
+            this.tbl_anamorphic.Controls.Add(this.updownParHeight, 1, 4);
+            this.tbl_anamorphic.Controls.Add(this.lbl_anamorphic, 0, 0);
+            this.tbl_anamorphic.Controls.Add(this.labelDisplaySize, 1, 5);
+            this.tbl_anamorphic.Controls.Add(this.lbl_parHeight, 0, 4);
+            this.tbl_anamorphic.Controls.Add(this.labelStaticDisplaySize, 0, 5);
+            this.tbl_anamorphic.Controls.Add(this.updownParWidth, 1, 3);
+            this.tbl_anamorphic.Controls.Add(this.drp_anamorphic, 1, 0);
+            this.tbl_anamorphic.Controls.Add(this.lbl_parWidth, 0, 3);
+            this.tbl_anamorphic.Controls.Add(this.updownDisplayWidth, 1, 2);
+            this.tbl_anamorphic.Controls.Add(this.lbl_modulus, 0, 1);
+            this.tbl_anamorphic.Controls.Add(this.lbl_displayWidth, 0, 2);
+            this.tbl_anamorphic.Controls.Add(this.drp_modulus, 1, 1);
+            this.tbl_anamorphic.Location = new System.Drawing.Point(16, 106);
+            this.tbl_anamorphic.Name = "tbl_anamorphic";
+            this.tbl_anamorphic.RowCount = 7;
+            this.tbl_anamorphic.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_anamorphic.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_anamorphic.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_anamorphic.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_anamorphic.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_anamorphic.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_anamorphic.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_anamorphic.Size = new System.Drawing.Size(206, 181);
+            this.tbl_anamorphic.TabIndex = 115;
+            // 
+            // drp_colormatrix
+            // 
+            this.drp_colormatrix.FormattingEnabled = true;
+            this.drp_colormatrix.Items.AddRange(new object[] {
+            "Auto",
+            "ITU-R BT.709",
+            "ITU-R BT.601"});
+            this.drp_colormatrix.Location = new System.Drawing.Point(82, 157);
+            this.drp_colormatrix.MaxDropDownItems = 3;
+            this.drp_colormatrix.Name = "drp_colormatrix";
+            this.drp_colormatrix.Size = new System.Drawing.Size(121, 21);
+            this.drp_colormatrix.TabIndex = 1;
+            this.drp_colormatrix.SelectedIndexChanged += new System.EventHandler(this.DrpColorMatrixSelectedIndexChanged);
+            // 
+            // lbl_colormatrix
+            // 
+            this.lbl_colormatrix.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lbl_colormatrix.AutoSize = true;
+            this.lbl_colormatrix.Location = new System.Drawing.Point(0, 161);
+            this.lbl_colormatrix.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+            this.lbl_colormatrix.Name = "lbl_colormatrix";
+            this.lbl_colormatrix.Size = new System.Drawing.Size(66, 13);
+            this.lbl_colormatrix.TabIndex = 0;
+            this.lbl_colormatrix.Text = "Colormatrix:";
             // 
             // updownParHeight
             // 
@@ -430,18 +506,18 @@ namespace Handbrake.Controls
             this.updownParHeight.TabIndex = 112;
             this.updownParHeight.ValueChanged += new System.EventHandler(this.TextWidthValueChanged);
             // 
-            // label6
+            // lbl_anamorphic
             // 
-            this.label6.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label6.AutoSize = true;
-            this.label6.BackColor = System.Drawing.Color.Transparent;
-            this.label6.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label6.Location = new System.Drawing.Point(0, 7);
-            this.label6.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(67, 13);
-            this.label6.TabIndex = 81;
-            this.label6.Text = "Anamorphic:";
+            this.lbl_anamorphic.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lbl_anamorphic.AutoSize = true;
+            this.lbl_anamorphic.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_anamorphic.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_anamorphic.Location = new System.Drawing.Point(0, 7);
+            this.lbl_anamorphic.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+            this.lbl_anamorphic.Name = "lbl_anamorphic";
+            this.lbl_anamorphic.Size = new System.Drawing.Size(67, 13);
+            this.lbl_anamorphic.TabIndex = 81;
+            this.lbl_anamorphic.Text = "Anamorphic:";
             // 
             // labelDisplaySize
             // 
@@ -576,69 +652,285 @@ namespace Handbrake.Controls
             this.drp_modulus.TabIndex = 88;
             this.drp_modulus.SelectedIndexChanged += new System.EventHandler(this.DrpModulusSelectedIndexChanged);
             // 
-            // label8
+            // lbl_cropping
             // 
-            this.label8.AutoSize = true;
-            this.label8.BackColor = System.Drawing.Color.Transparent;
-            this.label8.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label8.Location = new System.Drawing.Point(416, 13);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(57, 13);
-            this.label8.TabIndex = 114;
-            this.label8.Text = "Cropping";
+            this.lbl_cropping.AutoSize = true;
+            this.lbl_cropping.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_cropping.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_cropping.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_cropping.Location = new System.Drawing.Point(335, 13);
+            this.lbl_cropping.Name = "lbl_cropping";
+            this.lbl_cropping.Size = new System.Drawing.Size(57, 13);
+            this.lbl_cropping.TabIndex = 114;
+            this.lbl_cropping.Text = "Cropping";
             // 
-            // label26
+            // lbl_size
             // 
-            this.label26.AutoSize = true;
-            this.label26.BackColor = System.Drawing.Color.Transparent;
-            this.label26.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label26.Location = new System.Drawing.Point(13, 13);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(30, 13);
-            this.label26.TabIndex = 113;
-            this.label26.Text = "Size";
+            this.lbl_size.AutoSize = true;
+            this.lbl_size.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_size.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_size.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_size.Location = new System.Drawing.Point(13, 13);
+            this.lbl_size.Name = "lbl_size";
+            this.lbl_size.Size = new System.Drawing.Size(30, 13);
+            this.lbl_size.TabIndex = 113;
+            this.lbl_size.Text = "Size";
             // 
             // lbl_presetCropWarning
             // 
             this.lbl_presetCropWarning.AutoSize = true;
             this.lbl_presetCropWarning.ForeColor = System.Drawing.Color.Black;
-            this.lbl_presetCropWarning.Location = new System.Drawing.Point(479, 13);
+            this.lbl_presetCropWarning.Location = new System.Drawing.Point(390, 13);
             this.lbl_presetCropWarning.Name = "lbl_presetCropWarning";
             this.lbl_presetCropWarning.Size = new System.Drawing.Size(140, 13);
             this.lbl_presetCropWarning.TabIndex = 118;
             this.lbl_presetCropWarning.Text = "( Preset values are in use! )";
             // 
+            // lbl_padding
+            // 
+            this.lbl_padding.AutoSize = true;
+            this.lbl_padding.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_padding.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_padding.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_padding.Location = new System.Drawing.Point(335, 158);
+            this.lbl_padding.Name = "lbl_padding";
+            this.lbl_padding.Size = new System.Drawing.Size(52, 13);
+            this.lbl_padding.TabIndex = 114;
+            this.lbl_padding.Text = "Padding";
+            // 
+            // tbl_padding
+            // 
+            this.tbl_padding.AutoSize = true;
+            this.tbl_padding.ColumnCount = 6;
+            this.tbl_padding.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 96F));
+            this.tbl_padding.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_padding.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_padding.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_padding.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_padding.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tbl_padding.Controls.Add(this.pad_right, 4, 2);
+            this.tbl_padding.Controls.Add(this.check_disablePad, 0, 1);
+            this.tbl_padding.Controls.Add(this.lbl_padLeft, 1, 2);
+            this.tbl_padding.Controls.Add(this.pad_left, 2, 2);
+            this.tbl_padding.Controls.Add(this.lbl_padRight, 5, 2);
+            this.tbl_padding.Controls.Add(this.check_enablePad, 0, 0);
+            this.tbl_padding.Controls.Add(this.lbl_padTop, 3, 0);
+            this.tbl_padding.Controls.Add(this.pad_top, 3, 1);
+            this.tbl_padding.Controls.Add(this.pad_bottom, 3, 3);
+            this.tbl_padding.Controls.Add(this.lbl_padBottom, 3, 4);
+            this.tbl_padding.Location = new System.Drawing.Point(338, 180);
+            this.tbl_padding.Name = "tbl_padding";
+            this.tbl_padding.RowCount = 5;
+            this.tbl_padding.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_padding.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_padding.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_padding.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_padding.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tbl_padding.Size = new System.Drawing.Size(313, 123);
+            this.tbl_padding.TabIndex = 119;
+            // 
+            // pad_right
+            // 
+            this.pad_right.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.pad_right.Location = new System.Drawing.Point(228, 53);
+            this.pad_right.Maximum = new decimal(new int[] {
+            1920,
+            0,
+            0,
+            0});
+            this.pad_right.Name = "pad_right";
+            this.pad_right.Size = new System.Drawing.Size(44, 21);
+            this.pad_right.TabIndex = 101;
+            this.pad_right.ValueChanged += new System.EventHandler(this.PadValueChanged);
+            // 
+            // check_disablePad
+            // 
+            this.check_disablePad.AutoSize = true;
+            this.check_disablePad.Checked = true;
+            this.check_disablePad.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.check_disablePad.Location = new System.Drawing.Point(0, 26);
+            this.check_disablePad.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+            this.check_disablePad.Name = "check_disablePad";
+            this.check_disablePad.Size = new System.Drawing.Size(65, 17);
+            this.check_disablePad.TabIndex = 106;
+            this.check_disablePad.TabStop = true;
+            this.check_disablePad.Text = "Disable";
+            this.check_disablePad.UseVisualStyleBackColor = true;
+            this.check_disablePad.CheckedChanged += new System.EventHandler(this.CheckEnablePadChanged);
+            // 
+            // lbl_padLeft
+            // 
+            this.lbl_padLeft.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lbl_padLeft.AutoSize = true;
+            this.lbl_padLeft.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_padLeft.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_padLeft.Location = new System.Drawing.Point(96, 57);
+            this.lbl_padLeft.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+            this.lbl_padLeft.Name = "lbl_padLeft";
+            this.lbl_padLeft.Size = new System.Drawing.Size(26, 13);
+            this.lbl_padLeft.TabIndex = 97;
+            this.lbl_padLeft.Text = "Left";
+            // 
+            // pad_left
+            // 
+            this.pad_left.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.pad_left.Location = new System.Drawing.Point(128, 53);
+            this.pad_left.Maximum = new decimal(new int[] {
+            1920,
+            0,
+            0,
+            0});
+            this.pad_left.Name = "pad_left";
+            this.pad_left.Size = new System.Drawing.Size(44, 21);
+            this.pad_left.TabIndex = 98;
+            this.pad_left.ValueChanged += new System.EventHandler(this.PadValueChanged);
+            // 
+            // lbl_padRight
+            // 
+            this.lbl_padRight.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lbl_padRight.AutoSize = true;
+            this.lbl_padRight.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_padRight.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_padRight.Location = new System.Drawing.Point(278, 57);
+            this.lbl_padRight.Margin = new System.Windows.Forms.Padding(3);
+            this.lbl_padRight.Name = "lbl_padRight";
+            this.lbl_padRight.Size = new System.Drawing.Size(32, 13);
+            this.lbl_padRight.TabIndex = 102;
+            this.lbl_padRight.Text = "Right";
+            // 
+            // check_enablePad
+            // 
+            this.check_enablePad.AutoSize = true;
+            this.check_enablePad.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.check_enablePad.Location = new System.Drawing.Point(0, 3);
+            this.check_enablePad.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+            this.check_enablePad.Name = "check_enablePad";
+            this.check_enablePad.Size = new System.Drawing.Size(63, 17);
+            this.check_enablePad.TabIndex = 105;
+            this.check_enablePad.Text = "Enable";
+            this.check_enablePad.UseVisualStyleBackColor = true;
+            this.check_enablePad.CheckedChanged += new System.EventHandler(this.CheckEnablePadChanged);
+            // 
+            // lbl_padTop
+            // 
+            this.lbl_padTop.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.lbl_padTop.AutoSize = true;
+            this.lbl_padTop.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_padTop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_padTop.Location = new System.Drawing.Point(187, 7);
+            this.lbl_padTop.Margin = new System.Windows.Forms.Padding(3);
+            this.lbl_padTop.Name = "lbl_padTop";
+            this.lbl_padTop.Size = new System.Drawing.Size(25, 13);
+            this.lbl_padTop.TabIndex = 99;
+            this.lbl_padTop.Text = "Top";
+            // 
+            // pad_top
+            // 
+            this.pad_top.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.pad_top.Location = new System.Drawing.Point(178, 26);
+            this.pad_top.Maximum = new decimal(new int[] {
+            1080,
+            0,
+            0,
+            0});
+            this.pad_top.Name = "pad_top";
+            this.pad_top.Size = new System.Drawing.Size(44, 21);
+            this.pad_top.TabIndex = 100;
+            this.pad_top.ValueChanged += new System.EventHandler(this.PadValueChanged);
+            // 
+            // pad_bottom
+            // 
+            this.pad_bottom.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.pad_bottom.Location = new System.Drawing.Point(178, 80);
+            this.pad_bottom.Maximum = new decimal(new int[] {
+            1080,
+            0,
+            0,
+            0});
+            this.pad_bottom.Name = "pad_bottom";
+            this.pad_bottom.Size = new System.Drawing.Size(44, 21);
+            this.pad_bottom.TabIndex = 103;
+            this.pad_bottom.ValueChanged += new System.EventHandler(this.PadValueChanged);
+            // 
+            // lbl_padBottom
+            // 
+            this.lbl_padBottom.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lbl_padBottom.AutoSize = true;
+            this.lbl_padBottom.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_padBottom.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.lbl_padBottom.Location = new System.Drawing.Point(179, 107);
+            this.lbl_padBottom.Margin = new System.Windows.Forms.Padding(3);
+            this.lbl_padBottom.Name = "lbl_padBottom";
+            this.lbl_padBottom.Size = new System.Drawing.Size(41, 13);
+            this.lbl_padBottom.TabIndex = 104;
+            this.lbl_padBottom.Text = "Bottom";
+            // 
+            // check_disableCrop
+            // 
+            this.check_disableCrop.AutoSize = true;
+            this.check_disableCrop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.check_disableCrop.Location = new System.Drawing.Point(0, 53);
+            this.check_disableCrop.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+            this.check_disableCrop.Name = "check_disableCrop";
+            this.check_disableCrop.Size = new System.Drawing.Size(59, 17);
+            this.check_disableCrop.TabIndex = 107;
+            this.check_disableCrop.Text = "Disable";
+            this.check_disableCrop.UseVisualStyleBackColor = true;
+            this.check_disableCrop.CheckedChanged += new System.EventHandler(this.CheckAutoCropCheckedChanged);
+            // 
             // PictureSettings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.tbl_padding);
             this.Controls.Add(this.lbl_presetCropWarning);
-            this.Controls.Add(this.tableLayoutPanel3);
-            this.Controls.Add(this.tableLayoutPanel2);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label26);
+            this.Controls.Add(this.tbl_cropping);
+            this.Controls.Add(this.tbl_size);
+            this.Controls.Add(this.tbl_anamorphic);
+            this.Controls.Add(this.lbl_padding);
+            this.Controls.Add(this.lbl_cropping);
+            this.Controls.Add(this.lbl_size);
             this.Enabled = false;
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "PictureSettings";
-            this.Size = new System.Drawing.Size(666, 279);
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
+            this.Size = new System.Drawing.Size(716, 304);
+            this.tbl_cropping.ResumeLayout(false);
+            this.tbl_cropping.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.crop_left)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.crop_right)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.crop_top)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.crop_bottom)).EndInit();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            this.tbl_size.ResumeLayout(false);
+            this.tbl_size.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.text_width)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.text_height)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.tbl_anamorphic.ResumeLayout(false);
+            this.tbl_anamorphic.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updownParHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.updownParWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.updownDisplayWidth)).EndInit();
+            this.tbl_padding.ResumeLayout(false);
+            this.tbl_padding.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pad_right)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pad_left)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pad_top)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pad_bottom)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -646,26 +938,26 @@ namespace Handbrake.Controls
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        internal System.Windows.Forms.Label Label15;
+        private System.Windows.Forms.TableLayoutPanel tbl_cropping;
+        internal System.Windows.Forms.Label lbl_cropLeft;
         internal System.Windows.Forms.NumericUpDown crop_left;
         internal System.Windows.Forms.NumericUpDown crop_right;
         internal System.Windows.Forms.RadioButton check_autoCrop;
-        internal System.Windows.Forms.Label Label51;
+        internal System.Windows.Forms.Label lbl_cropRight;
         internal System.Windows.Forms.NumericUpDown crop_top;
-        internal System.Windows.Forms.Label Label53;
-        internal System.Windows.Forms.Label Label52;
+        internal System.Windows.Forms.Label lbl_cropBottom;
+        internal System.Windows.Forms.Label lbl_cropTop;
         internal System.Windows.Forms.NumericUpDown crop_bottom;
         internal System.Windows.Forms.RadioButton check_customCrop;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        internal System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TableLayoutPanel tbl_size;
+        internal System.Windows.Forms.Label lbl_src;
         internal System.Windows.Forms.Label lbl_src_res;
-        internal System.Windows.Forms.Label Label55;
-        internal System.Windows.Forms.Label label4;
+        internal System.Windows.Forms.Label lbl_width;
+        internal System.Windows.Forms.Label lbl_height;
         internal System.Windows.Forms.CheckBox check_KeepAR;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tbl_anamorphic;
         internal System.Windows.Forms.NumericUpDown updownParHeight;
-        internal System.Windows.Forms.Label label6;
+        internal System.Windows.Forms.Label lbl_anamorphic;
         internal System.Windows.Forms.Label labelDisplaySize;
         internal System.Windows.Forms.Label lbl_parHeight;
         internal System.Windows.Forms.Label labelStaticDisplaySize;
@@ -676,11 +968,28 @@ namespace Handbrake.Controls
         internal System.Windows.Forms.Label lbl_modulus;
         internal System.Windows.Forms.Label lbl_displayWidth;
         internal System.Windows.Forms.ComboBox drp_modulus;
-        internal System.Windows.Forms.Label label8;
-        internal System.Windows.Forms.Label label26;
+        internal System.Windows.Forms.Label lbl_cropping;
+        internal System.Windows.Forms.Label lbl_size;
         internal System.Windows.Forms.NumericUpDown text_width;
         internal System.Windows.Forms.NumericUpDown text_height;
         private System.Windows.Forms.Label lbl_presetCropWarning;
+        private System.Windows.Forms.Label lbl_colormatrix;
+        internal System.Windows.Forms.ComboBox drp_colormatrix;
+        internal System.Windows.Forms.Label lbl_padding;
+        internal System.Windows.Forms.NumericUpDown pad_right;
+        internal System.Windows.Forms.RadioButton check_disablePad;
+        internal System.Windows.Forms.Label lbl_padLeft;
+        internal System.Windows.Forms.NumericUpDown pad_left;
+        internal System.Windows.Forms.Label lbl_padRight;
+        internal System.Windows.Forms.RadioButton check_enablePad;
+        internal System.Windows.Forms.Label lbl_padTop;
+        internal System.Windows.Forms.NumericUpDown pad_top;
+        internal System.Windows.Forms.NumericUpDown pad_bottom;
+        internal System.Windows.Forms.Label lbl_padBottom;
+        private System.Windows.Forms.Label lbl_useITUPar;
+        internal System.Windows.Forms.CheckBox check_UseITUPar;
+        internal System.Windows.Forms.TableLayoutPanel tbl_padding;
+        internal System.Windows.Forms.RadioButton check_disableCrop;
 
 
 

@@ -191,6 +191,15 @@ namespace HandBrake.ApplicationServices.Utilities
             }
             query += " --modulus " + task.Modulus;
 
+            if (task.PaddingEnabled)
+                query += string.Format(" --pad {0}:{1}:{2}:{3}", task.Padding.Top, task.Padding.Bottom, task.Padding.Left, task.Padding.Right);
+
+            if (task.UseITUPar)
+                query += " --itu-par";
+
+            if (task.ColorMatrix.HasValue)
+                query += string.Format(" -M {0}", task.ColorMatrix.Value);
+
             return query;
         }
 
@@ -274,6 +283,18 @@ namespace HandBrake.ApplicationServices.Utilities
 
             if (task.Grayscale)
                 query += " -g ";
+
+            switch (task.ColorSpaceConverter)
+            {
+                case ColorSpaceConverter.Convert709to601:
+                    query += " --colorspace 709:601";
+                    break;
+                case ColorSpaceConverter.Convert601to709:
+                    query += " --colorspace 601:709";
+                    break;
+                default:
+                    break;
+            }
 
             return query;
         }

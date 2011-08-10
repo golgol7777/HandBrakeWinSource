@@ -142,6 +142,8 @@ namespace Handbrake.Controls
             this.drp_audioEncoder.Items.AddRange(new object[] {
             "AAC (faac)",
             "AAC (ffmpeg)",
+            "AAC (QuickTime)",
+            "HE-AAC (QuickTime)",
             "MP3 (lame)",
             "Vorbis (vorbis)",
             "AC3 Passthru",
@@ -190,6 +192,9 @@ namespace Handbrake.Controls
             this.drp_audioBitrate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.drp_audioBitrate.FormattingEnabled = true;
             this.drp_audioBitrate.Items.AddRange(new object[] {
+            "12",
+            "16",
+            "24",
             "32",
             "40",
             "48",
@@ -199,7 +204,17 @@ namespace Handbrake.Controls
             "96",
             "112",
             "128",
-            "160"});
+            "160",
+            "192",
+            "224",
+            "256",
+            "320",
+            "384",
+            "448",
+            "512",
+            "576",
+            "640",
+            "768"});
             this.drp_audioBitrate.Location = new System.Drawing.Point(534, 66);
             this.drp_audioBitrate.Name = "drp_audioBitrate";
             this.drp_audioBitrate.Size = new System.Drawing.Size(67, 21);

@@ -144,10 +144,12 @@
     <Compile Include="MarshalingConstants.cs" />
     <Compile Include="MessageLoggedEventArgs.cs" />
     <Compile Include="Model\Cropping.cs" />
+    <Compile Include="Model\Padding.cs" />
     <Compile Include="Model\EncodeJob.cs" />
     <Compile Include="Model\Encoding\Anamorphic.cs" />
     <Compile Include="Model\Encoding\AudioEncoder.cs" />
     <Compile Include="Model\Encoding\AudioEncoding.cs" />
+    <Compile Include="Model\Encoding\ColorSpaceConverter.cs" />
     <Compile Include="Model\Encoding\Decomb.cs" />
     <Compile Include="Model\Encoding\Deinterlace.cs" />
     <Compile Include="Model\Encoding\Denoise.cs" />
